@@ -9,14 +9,20 @@ ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $ROOT_DIR/..
 source config.sh
 
-A6T_REPO_HASH=$(git -C $REPOSITORY_DIR/$A6T_REPO_NAME log -1 --pretty=%h)
+CASITA_A6T_REPO_HASH=$(git log -1 --pretty=%h)
 
 ##
 # Harvest
 ##
 
 docker build \
-  -t $HARVEST_IMAGE_NAME_TAG \
-  --build-arg BUILDKIT_INLINE_CACHE=1 \
-  --cache-from=$HARVEST_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  $REPOSITORY_DIR/$HARVEST_REPO_NAME
+  -t $CASITA_A6T_IMAGE_NAME_TAG \
+  --build-arg A6T_BASE=${A6T_IMAGE_NAME_TAG} \
+  --cache-from=$CASITA_A6T_IMAGE_NAME:$CONTAINER_CACHE_TAG \
+  containers/casita-a6t
+
+# kafka init
+docker build \
+  -t $CASITA_DECODER_IMAGE_NAME_TAG \
+  --cache-from=$CASITA_DECODER_IMAGE_NAME:$CONTAINER_CACHE_TAG \
+  containers/decoder

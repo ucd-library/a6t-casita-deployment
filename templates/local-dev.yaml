@@ -9,22 +9,6 @@ services:
       - zookeeper-data:/data
       - zookeeper-datalog:/datalog
 
-
-  harvest:
-    image: {{HARVEST_IMAGE_NAME}}:{{HARVEST_TAG}}
-    env_file:
-      - .env
-    volumes:
-       - harvest-xslt-data:/usr/local/vivo/harvester/data
-       - harvest-data:/var/lib/harvest
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/lib:/usr/local/lib/harvest
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/ucdid:/usr/local/bin/ucdid
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/cdl:/usr/local/bin/cdl
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/harvest:/usr/local/bin/harvest
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/lib/node/lib:/service/lib
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/lib/node/index.js:/service/index.js
-    command: tail -f /dev/null
-
   kafka:
     image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
     env_file:
@@ -47,7 +31,7 @@ services:
       - redis-data:/data
 
   composer:
-    image: {{CASITA_COMPOSER_IMAGE_NAME}}:{{APP_VERSION}}
+    image: {{CASITA_A6T_IMAGE_NAME}}:{{APP_VERSION}}
     env_file:
       - .env
     volumes:
@@ -55,10 +39,11 @@ services:
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/expire:/service/expire
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/utils:/service/utils
       - ../casita-composer/lib:/casita/lib
+    command: node composer/instance.js
     # command: bash -c "tail -f /dev/null"
 
   expire:
-    image: {{A6T_IMAGE_NAME}}:{{A6T_TAG}}
+    image: {{CASITA_A6T_IMAGE_NAME}}:{{APP_VERSION}}
     env_file:
       - .env
     volumes:
@@ -66,6 +51,17 @@ services:
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/expire:/service/expire
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/utils:/service/utils
     command: node expire/instance.js
+    # command: bash -c "tail -f /dev/null"
+
+  init:
+    image: {{CASITA_A6T_IMAGE_NAME}}:{{APP_VERSION}}
+    env_file:
+      - .env
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/composer:/service/composer
+      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/expire:/service/expire
+      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/utils:/service/utils
+    command: node init
     # command: bash -c "tail -f /dev/null"
 
   decoder:

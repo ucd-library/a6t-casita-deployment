@@ -11,5 +11,4 @@ RUN npm install --production
 
 COPY lib lib
 
-WORKDIR /service/composer
-CMD node instance.js
+WORKDIR /service
