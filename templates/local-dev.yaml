@@ -38,7 +38,7 @@ services:
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/composer:/service/composer
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/expire:/service/expire
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/utils:/service/utils
-      - ../casita-composer/lib:/casita/lib
+      - ../containers/casita-a6t/lib:/casita/lib
     command: node composer/instance.js
     # command: bash -c "tail -f /dev/null"
 
@@ -50,6 +50,7 @@ services:
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/composer:/service/composer
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/expire:/service/expire
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/utils:/service/utils
+      - ../containers/casita-a6t/lib:/casita/lib
     command: node expire/instance.js
     # command: bash -c "tail -f /dev/null"
 
@@ -61,6 +62,8 @@ services:
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/composer:/service/composer
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/expire:/service/expire
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/utils:/service/utils
+      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/init:/service/init
+      - ../containers/casita-a6t/lib:/casita/lib
     command: node init
     # command: bash -c "tail -f /dev/null"
 
@@ -77,8 +80,7 @@ services:
       - ./docker.key:/root/.ssh/id_rsa
     environment:
       - GRB_FILE=decoded
-    restart: always
-    # command: bash -c "tail -f /dev/null"
+    command: bash -c "tail -f /dev/null"
 
 
 volumes:

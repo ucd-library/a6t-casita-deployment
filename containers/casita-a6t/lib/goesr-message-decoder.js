@@ -1,6 +1,8 @@
-import {apidUtils} from '@ucd-lib/goes-r-packet-decoder';
+import goesrDecoder from '@ucd-lib/goes-r-packet-decoder';
 import fs from 'fs';
 import path from 'path';
+
+const apidUtils = goesrDecoder.apidUtils;
 
 function decoder(msg, config) {
   let length = msg.readUInt32BE(0);
@@ -33,7 +35,6 @@ function handleGenericMessage(metadata, payload) {
     metadata.spacePacketHeaders.secondary ) {
     ms = metadata.spacePacketHeaders.secondary.MILLISECONDS_OF_THE_DAY+'';
   }
-  let data;
 
   let productName = (product.imageScale || product.label || 'unknown').toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
@@ -59,7 +60,7 @@ function handleGenericMessage(metadata, payload) {
     directory : basePath.join('/')
   }
 
-  let metadata = Object.assign({}, data);
+  metadata = Object.assign({}, data);
   let payloadData = Object.assign({}, data);
 
   metadata.path.filename = 'metadata.json';
@@ -98,10 +99,10 @@ function handleImageMessage(metadata, payload) {
     metadata.imagePayload.UPPER_LOWER_LEFT_X_COORDINATE+'-'+metadata.imagePayload.UPPER_LOWER_LEFT_Y_COORDINATE
   ];
 
-  let {satellite, product, date, hour, minsec, band, apid, blocks, block} = basePath;
+  let {satellite, pathProduct, pathDate, hour, minsec, band, apid, blocks, block} = basePath;
 
   let data = {
-    satellite, product, date, hour, minsec, band, apid, block,
+    satellite, pathProduct, pathDate, hour, minsec, band, apid, block,
     path : {
       base : config.fs.nfsRoot,
       directory : basePath.join('/')

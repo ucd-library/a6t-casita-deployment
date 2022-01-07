@@ -5,15 +5,15 @@
 ########################################
 
 # Grab build number is mounted in CI system
+BUILD_NUM=""
 if [[ -f /config/.buildenv ]]; then
   source /config/.buildenv
-else
-  BUILD_NUM=-1
+  BUILD_NUM=".${BUILD_NUM}"
 fi
 
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v0.0.1-alpha.${BUILD_NUM}
+APP_VERSION=v0.0.1-alpha${BUILD_NUM}
 
 ##
 # TAGS

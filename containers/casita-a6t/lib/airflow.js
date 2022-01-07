@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-const BASE_API = env.AIRFLOW_BASE_API || 'http://airflow/api/v1/dags';
+const BASE_API = process.env.AIRFLOW_BASE_API || 'http://airflow/api/v1/dags';
 
 class Airflow {
 

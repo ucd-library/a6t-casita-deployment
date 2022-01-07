@@ -1,0 +1,63 @@
+version: '3'
+services:
+
+  zookeeper:
+    image: {{ZOOKEEPER_IMAGE_NAME}}:{{ZOOKEEPER_TAG}}
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    volumes:
+      - zookeeper-data:/data
+      - zookeeper-datalog:/datalog
+
+  kafka:
+    image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
+    env_file:
+      - .env
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CLIENT_USER=admin
+      - KAFKA_CFG_MAX_REQUEST_SIZE=10485760
+    volumes:
+      - kafka-data:/bitnami/kafka
+    depends_on:
+      - "zookeeper"
+
+  redis:
+    image: {{REDIS_IMAGE_NAME}}:{{REDIS_TAG}}
+    volumes:
+      - redis-data:/data
+
+  composer:
+    image: {{CASITA_A6T_IMAGE_NAME}}:{{APP_VERSION}}
+    env_file:
+      - .env
+    command: node composer/instance.js
+
+  expire:
+    image: {{CASITA_A6T_IMAGE_NAME}}:{{APP_VERSION}}
+    env_file:
+      - .env
+    command: node expire/instance.js
+
+  init:
+    image: {{CASITA_A6T_IMAGE_NAME}}:{{APP_VERSION}}
+    env_file:
+      - .env
+    command: node init
+
+  decoder:
+    image: {{CASITA_DECODER_IMAGE_NAME}}:{{APP_VERSION}}
+    env_file:
+      - .env
+    volumes:
+      - ./docker.key:/root/.ssh/id_rsa
+    environment:
+      - GRB_FILE=decoded
+    restart: always
+
+volumes:
+  kafka-data:
+  zookeeper-data:
+  zookeeper-datalog:
+  redis-data:
