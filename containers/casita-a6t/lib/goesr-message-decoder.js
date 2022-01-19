@@ -1,8 +1,10 @@
 import goesrDecoder from '@ucd-lib/goes-r-packet-decoder';
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
+import casitaConfig from './config.js';
 
 const apidUtils = goesrDecoder.apidUtils;
+const SATELLITE = process.env.SATELLITE || 'west';
 
 function decoder(msg, config) {
   let length = msg.readUInt32BE(0);
@@ -53,22 +55,23 @@ function handleGenericMessage(metadata, payload) {
     data.ms = ms;
     basePath.push(ms);
   }
-  basePath.push(apid);
+  basePath.push(metadata.apid);
 
   data.path = {
-    base : config.fs.nfsRoot,
+    base : casitaConfig.nfs.root,
     directory : basePath.join('/')
   }
 
-  metadata = Object.assign({}, data);
+  let payloadMetadata = Object.assign({}, data);
   let payloadData = Object.assign({}, data);
 
-  metadata.path.filename = 'metadata.json';
+  payloadMetadata.path.filename = 'metadata.json';
   payloadData.path.filename = 'payload.bin';
 
+  fs.mkdirpSync(path.join(payloadMetadata.path.base, payloadMetadata.path.directory));
   fs.writeFileSync(
-    path.join(metadata.path.base, metadata.path.directory, metadata.path.filename),
-    JSON.stringify(metadata)
+    path.join(payloadMetadata.path.base, payloadMetadata.path.directory, payloadMetadata.path.filename),
+    JSON.stringify(payloadMetadata)
   );
 
   fs.writeFileSync(
@@ -76,7 +79,7 @@ function handleGenericMessage(metadata, payload) {
     payload
   );
 
-  return [metadata, payloadData];
+  return [payloadMetadata, payloadData];
 }
 
 function handleImageMessage(metadata, payload) {
@@ -99,12 +102,13 @@ function handleImageMessage(metadata, payload) {
     metadata.imagePayload.UPPER_LOWER_LEFT_X_COORDINATE+'-'+metadata.imagePayload.UPPER_LOWER_LEFT_Y_COORDINATE
   ];
 
-  let {satellite, pathProduct, pathDate, hour, minsec, band, apid, blocks, block} = basePath;
+  let [satellite, pathScale, pathDate, hour, minsec, band, apid, blocks, block] = basePath;
 
   let data = {
-    satellite, pathProduct, pathDate, hour, minsec, band, apid, block,
+    satellite, 
+    scale : pathScale, date: pathDate, hour, minsec, band, apid, block,
     path : {
-      base : config.fs.nfsRoot,
+      base : casitaConfig.nfs.root,
       directory : basePath.join('/')
     }
   }
@@ -113,6 +117,7 @@ function handleImageMessage(metadata, payload) {
     data.path.filename = 'fragment-metadata.json';
     data.metadata = metadata;
 
+    fs.mkdirpSync(path.join(data.path.base, data.path.directory));
     fs.writeFileSync(
       path.join(data.path.base, data.path.directory, data.path.filename),
       JSON.stringify(metadata)
@@ -121,19 +126,21 @@ function handleImageMessage(metadata, payload) {
     return [data];
   } else {
 
-    data.path.directory = path.join(data.path.directory, 'fragments', metadata.index);
+    data.path.directory = path.join(data.path.directory, 'fragments', metadata.index+'');
 
-    let metadata = Object.assign({}, data);
+    let payloadMetadata = Object.assign({}, data);
     let payloadData = Object.assign({}, data);
   
-    metadata.path.filename = 'image-fragment-metadata.json';
+    payloadMetadata.path.filename = 'image-fragment-metadata.json';
     payloadData.path.filename = 'image-fragment.jp2';
 
-    metadata.metadata = metadata
+    payloadMetadata.metadata = metadata
 
+    
+    fs.mkdirpSync(path.join(payloadMetadata.path.base, payloadMetadata.path.directory));
     fs.writeFileSync(
-      path.join(metadata.path.base, metadata.path.directory, metadata.path.filename),
-      JSON.stringify(metadata)
+      path.join(payloadMetadata.path.base, payloadMetadata.path.directory, payloadMetadata.path.filename),
+      JSON.stringify(payloadMetadata)
     );
   
     fs.writeFileSync(
@@ -141,7 +148,7 @@ function handleImageMessage(metadata, payload) {
       payload
     );
   
-    return [metadata, payloadData];
+    return [payloadMetadata, payloadData];
   }
 }
 

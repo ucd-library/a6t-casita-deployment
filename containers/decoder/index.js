@@ -1,8 +1,10 @@
-import Processor from '@ucd-lib/goes-r-packet-decoder/lib/binary-stream-processor'
+import decoder from '@ucd-lib/goes-r-packet-decoder';
 import {logger} from '@ucd-lib/argonaut';
-import kafkaSetup from './default-kafka-setup.js';
+import kafkaSetup from './lib/default-kafka-setup.js';
 
-let processor = new Processor({
+const {BinaryStreamProcessor} = decoder;
+
+let processor = new BinaryStreamProcessor({
   name : process.env.GRB_FILE,
   consoleLogStatus : false,
   onStreamClosed : () => logger.warn(`${process.env.GRB_FILE} grb tail stream closed`),

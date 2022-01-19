@@ -1,5 +1,6 @@
 import goesrMsgDecorder from './goesr-message-decoder.js';
 import airflow from './airflow.js';
+import pathUtils from 'path';
 
 const GENERIC_PAYLOAD_APIDS = /^(301|302)$/;
 
@@ -20,15 +21,16 @@ const dag = {
     expire : 60 * 2,
     
     ready : msgs => {
-      let fragments = msgs.filter(items => items.path.filename === 'image-fragment.jp2');
-      let metadata = msgs.filter(items => items.path.filename === 'fragment-metadata.json');
+      let fragments = msgs.filter(item => item.path.filename === 'image-fragment.jp2');
+      let metadata = msgs.filter(item => item.path.filename === 'fragment-metadata.json');
       
-      if( metadata.length ) return false;
+      if( !metadata.length ) return false;
       return (metadata[0].metadata.fragmentsCount === fragments.length);
     },
 
     sink : (key, msgs) => {
       let {scale, date, hour, minsec, band, apid, block, path} = msgs[0];
+      path.directory = pathUtils.resolve(path.directory, '..');
 
       return airflow.runDag(key, 'block-composite-images', {
         scale, date, hour, minsec, band, apid, block, path
@@ -70,7 +72,7 @@ const dag = {
   'generic-payload-parser' : {
     dependencies : ['goesr-product'],
 
-    where : data => (data.match(GENERIC_PAYLOAD_APIDS) ? true : false) && (data.path.filename === 'payload.bin'),
+    where : data => (data.apid.match(GENERIC_PAYLOAD_APIDS) ? true : false) && (data.path.filename === 'payload.bin'),
 
     sink : (key, msgs) => {
       let {scale, date, hour, minsec, ms, band, apid, block, path} = msgs[0];

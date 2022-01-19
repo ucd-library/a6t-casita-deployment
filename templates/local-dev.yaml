@@ -75,9 +75,11 @@ services:
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/composer:/service/composer
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/expire:/service/expire
       - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/utils:/service/utils
-      - ../decoder/lib:/casita/lib
-      - ../decoder/index.js:/casita/index.js
+      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/init:/service/init
+      - ../containers/decoder/lib:/decoder/lib
+      - ../containers/decoder/index.js:/decoder/index.js
       - ./docker.key:/root/.ssh/id_rsa
+      - nfs-data:/storage
     environment:
       - GRB_FILE=decoded
     command: bash -c "tail -f /dev/null"
@@ -88,3 +90,4 @@ volumes:
   zookeeper-data:
   zookeeper-datalog:
   redis-data:
+  nfs-data:

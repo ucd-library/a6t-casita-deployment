@@ -3,12 +3,14 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ucd-lib/goes-r-packet-decoder": "^0.4.2"
+    "@ucd-lib/goes-r-packet-decoder": "^0.4.2",
+    "fs-extra": "^10.0.0"
   }
 }

@@ -12,6 +12,7 @@ class Airflow {
     }
   
     console.log(
+      'SENDING!!!!!',
       [BASE_API, dagId, 'dagRuns'].join('/'), 
       {
         method : 'POST',
