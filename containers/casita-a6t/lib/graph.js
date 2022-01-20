@@ -16,8 +16,8 @@ const dag = {
   'block-composite-image' : {
     dependencies : ['goesr-product'],
 
-    groupBy : '{{scale}}-{{date}}-{{hour}}-{{minsec}}-{{band}}-{{apid}}-{{block}}',
-    where : data => ['image-fragment.jp2', 'fragment-metadata.json'].includes(data.path.filename),
+    where : msg => ['image-fragment.jp2', 'fragment-metadata.json'].includes(msg.path.filename),
+    groupBy : msg => `${msg.scale}-${msg.date}-${msg.hour}-${msg.minsec}-${msg.band}-${msg.apid}-${msg.block}`,
     expire : 60 * 2,
     
     ready : msgs => {
@@ -43,7 +43,7 @@ const dag = {
   'full-composite-image' : {
     dependencies : ['block-composite-images'],
 
-    groupBy : '{{scale}}-{{date}}-{{hour}}-{{minsec}}-{{band}}-{{apid}}-{{path.filename}}',
+    groupBy : msg => `${msg.scale}-${date}-${hour}-${minsec}-${band}-${apid}-${path.filename}`,
     where : data => ['image.png', 'web.png', 'web-scaled.png'].includes(data.path.filename),
     expire : 60 * 20,
 

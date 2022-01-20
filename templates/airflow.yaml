@@ -1,5 +1,44 @@
-version: '3'
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
 
+# Basic Airflow cluster configuration for CeleryExecutor with Redis and PostgreSQL.
+#
+# WARNING: This configuration is for local development. Do not use it in a production deployment.
+#
+# This configuration supports basic configuration using environment variables or an .env file
+# The following variables are supported:
+#
+# AIRFLOW_IMAGE_NAME           - Docker image name used to run Airflow.
+#                                Default: apache/airflow:2.2.3
+# AIRFLOW_UID                  - User ID in Airflow containers
+#                                Default: 50000
+# Those configurations are useful mostly in case of standalone testing/running Airflow in test/try-out mode
+#
+# _AIRFLOW_WWW_USER_USERNAME   - Username for the administrator account (if requested).
+#                                Default: airflow
+# _AIRFLOW_WWW_USER_PASSWORD   - Password for the administrator account (if requested).
+#                                Default: airflow
+# _PIP_ADDITIONAL_REQUIREMENTS - Additional PIP requirements to add when starting all containers.
+#                                Default: ''
+#
+# Feel free to modify this file to suit your needs.
+---
+version: '3'
 x-airflow-common:
   &airflow-common
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
@@ -30,45 +69,7 @@ x-airflow-common:
     postgres:
       condition: service_healthy
 
-
-
 services:
-
-  zookeeper:
-    image: {{ZOOKEEPER_IMAGE_NAME}}:{{ZOOKEEPER_TAG}}
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-    volumes:
-      - zookeeper-data:/data
-      - zookeeper-datalog:/datalog
-
-  kafka:
-    image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
-    env_file:
-      - .env
-    environment:
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CLIENT_USER=admin
-      - KAFKA_CFG_MAX_REQUEST_SIZE=10485760
-    volumes:
-      - kafka-data:/bitnami/kafka
-    depends_on:
-      - "zookeeper"
-    ports:
-      - 9092:9092
-
-  redis:
-    image: {{REDIS_IMAGE_NAME}}:{{REDIS_TAG}}
-    volumes:
-      - redis-data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 30s
-      retries: 50
-    restart: always
-
   postgres:
     image: postgres:13
     environment:
@@ -83,59 +84,16 @@ services:
       retries: 5
     restart: always
 
-  a6t-composer:
-    image: {{CASITA_A6T_IMAGE_NAME}}:{{APP_VERSION}}
-    env_file:
-      - .env
-    volumes:
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/composer:/service/composer
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/expire:/service/expire
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/utils:/service/utils
-      - ../containers/casita-a6t/lib:/casita/lib
-    command: node composer/instance.js
-    # command: bash -c "tail -f /dev/null"
-
-  a6t-expire:
-    image: {{CASITA_A6T_IMAGE_NAME}}:{{APP_VERSION}}
-    env_file:
-      - .env
-    volumes:
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/composer:/service/composer
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/expire:/service/expire
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/utils:/service/utils
-      - ../containers/casita-a6t/lib:/casita/lib
-    command: node expire/instance.js
-    # command: bash -c "tail -f /dev/null"
-
-  a6t-init:
-    image: {{CASITA_A6T_IMAGE_NAME}}:{{APP_VERSION}}
-    env_file:
-      - .env
-    volumes:
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/composer:/service/composer
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/expire:/service/expire
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/utils:/service/utils
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/init:/service/init
-      - ../containers/casita-a6t/lib:/casita/lib
-    command: node init
-    # command: bash -c "tail -f /dev/null"
-
-  goesr-decoder:
-    image: {{CASITA_DECODER_IMAGE_NAME}}:{{APP_VERSION}}
-    env_file:
-      - .env
-    volumes:
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/composer:/service/composer
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/expire:/service/expire
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/utils:/service/utils
-      - ../{{REPOSITORY_DIR}}/{{A6T_REPO_NAME}}/init:/service/init
-      - ../containers/decoder/lib:/decoder/lib
-      - ../containers/decoder/index.js:/decoder/index.js
-      - ./docker.key:/root/.ssh/id_rsa
-      - nfs-data:/storage
-    environment:
-      - GRB_FILE=decoded
-    command: bash -c "tail -f /dev/null"
+  redis:
+    image: redis:latest
+    expose:
+      - 6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 30s
+      retries: 50
+    restart: always
 
   airflow-webserver:
     <<: *airflow-common
@@ -279,11 +237,34 @@ services:
     volumes:
       - .:/sources
 
+  airflow-cli:
+    <<: *airflow-common
+    profiles:
+      - debug
+    environment:
+      <<: *airflow-common-env
+      CONNECTION_CHECK_MAX_COUNT: "0"
+    # Workaround for entrypoint issue. See: https://github.com/apache/airflow/issues/16252
+    command:
+      - bash
+      - -c
+      - airflow
+
+  flower:
+    <<: *airflow-common
+    command: celery flower
+    ports:
+      - 5555:5555
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:5555/"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+    depends_on:
+      <<: *airflow-common-depends-on
+      airflow-init:
+        condition: service_completed_successfully
 
 volumes:
-  kafka-data:
-  zookeeper-data:
-  zookeeper-datalog:
-  redis-data:
-  nfs-data:
   postgres-db-volume:
