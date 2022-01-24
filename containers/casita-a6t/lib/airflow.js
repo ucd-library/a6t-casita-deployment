@@ -8,7 +8,10 @@ const AIRFLOW_PASSWORD = process.env._AIRFLOW_WWW_USER_PASSWORD || 'airflow';
 
 class Airflow {
 
-  runDag(key, dagId, conf) {
+  async runDag(key, dagId, conf) {
+
+    let productTime = new Date(conf.date+'T'+conf.hour+':'+conf.minsec.replace('-', ':'));
+    console.log('Product Time diff: '+Math.ceil((Date.now() - productTime.getTime())/1000) );
 
     const body = {
       dag_run_id : key,
@@ -26,7 +29,12 @@ class Airflow {
       }
     );
   
-    return this._callPostApi(key, [dagId, 'dagRuns'].join('/'), body);
+    let t = Date.now();
+    let resp = await this._callPostApi(key, [dagId, 'dagRuns'].join('/'), body);
+    console.log('POST time: '+(Date.now() - t));
+
+    return resp;
+
     // return {success: true};
   }
 

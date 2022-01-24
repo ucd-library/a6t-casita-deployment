@@ -4,6 +4,16 @@ import pathUtils from 'path';
 
 const GENERIC_PAYLOAD_APIDS = /^(301|302)$/;
 
+
+function isBandReady(msgs) {
+  let fragments = msgs.filter(item => item.path.filename === 'image-fragment.jp2');
+  let metadata = msgs.filter(item => item.path.filename === 'fragment-metadata.json');
+  
+  if( !metadata.length ) return false;
+  return (metadata[0].metadata.fragmentsCount <= fragments.length);
+}
+
+
 const dag = {
 
   'goesr-product' : {
@@ -17,23 +27,38 @@ const dag = {
     dependencies : ['goesr-product'],
 
     where : msg => ['image-fragment.jp2', 'fragment-metadata.json'].includes(msg.path.filename),
-    groupBy : msg => `${msg.scale}-${msg.date}-${msg.hour}-${msg.minsec}-${msg.band}-${msg.apid}-${msg.block}`,
+    groupBy : msg => `${msg.scale}-${msg.date}-${msg.hour}-${msg.minsec}-${msg.block}`,
     expire : 60 * 2,
     
-    ready : msgs => {
-      let fragments = msgs.filter(item => item.path.filename === 'image-fragment.jp2');
-      let metadata = msgs.filter(item => item.path.filename === 'fragment-metadata.json');
-      
-      if( !metadata.length ) return false;
-      return (metadata[0].metadata.fragmentsCount === fragments.length);
+    ready : (key, msgs) => {
+      // group by band
+      let bands = {}, band;
+      msgs.forEach(msg => {
+        if( !bands[msg.band] ) bands[msg.band] = []
+        bands[msg.band].push(msg);
+      })
+
+      if( Object.keys(bands).length < 6 ) {
+        return;
+      }
+
+      for( let bandID in bands ) {
+        band = bands[bandID];
+        if( !isBandReady(band) ) {
+          console.log(band);
+          return false;
+        }
+      }
+
+      return true;
     },
 
     sink : (key, msgs) => {
-      let {scale, date, hour, minsec, band, apid, block, path} = msgs[0];
-      path.directory = pathUtils.resolve(path.directory, '..');
+      let {scale, date, hour, minsec, block, path} = msgs[0];
+      path.directory = pathUtils.resolve(path.directory, '..', '..', '..');
 
       return airflow.runDag(key, 'block-composite-images', {
-        scale, date, hour, minsec, band, apid, block, path
+        scale, date, hour, minsec, block, path
       });
     }
   },
@@ -47,7 +72,7 @@ const dag = {
     where : data => ['image.png', 'web.png', 'web-scaled.png'].includes(data.path.filename),
     expire : 60 * 20,
 
-    ready : msgs => {
+    ready : (key, msgs) => {
       let scale = msgs[0].scale;
 
       // TODO: wish there was a better way
