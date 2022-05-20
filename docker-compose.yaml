@@ -2,7 +2,7 @@ version: '3'
 services:
 
   zookeeper:
-    image: zookeeper:3.6
+    image: {{ZOOKEEPER_IMAGE_NAME}}:{{ZOOKEEPER_TAG}}
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
@@ -10,7 +10,7 @@ services:
       - zookeeper-datalog:/datalog
 
   kafka:
-    image: bitnami/kafka:2.5.0
+    image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
     env_file:
       - .env
     environment:
@@ -24,7 +24,7 @@ services:
       - "zookeeper"
 
   redis:
-    image: redis:6.0.5
+    image: {{REDIS_IMAGE_NAME}}:{{REDIS_TAG}}
     volumes:
       - redis-data:/data
 

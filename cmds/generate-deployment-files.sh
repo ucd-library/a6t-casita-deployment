@@ -39,3 +39,16 @@ if [ ! -d "../a6t-casita-local-dev" ]; then
 fi
 
 echo "$content" > ../a6t-casita-local-dev/docker-compose.yaml
+
+# generate local helm values files
+content=$(cat airflow-values.yaml)
+echo "airflow-values.yaml (helm)"
+for key in $(compgen -v); do
+  if [[ $key == "COMP_WORDBREAKS" || $key == "content" ]]; then
+    continue;
+  fi
+  escaped=$(printf '%s\n' "${!key}" | sed -e 's/[\/&]/\\&/g')
+  content=$(echo "$content" | sed "s/{{$key}}/${escaped}/g") 
+done
+
+echo "$content" > ../a6t-casita-local-dev/airflow-values.yaml
