@@ -29,25 +29,25 @@ services:
       - redis-data:/data
 
   composer:
-    image: gcr.io/ucdlib-pubreg/casita-a6t:v0.0.1-alpha
+    image: gcr.io/ucdlib-pubreg/casita-a6t-controller:v0.0.1-alpha
     env_file:
       - .env
     command: node composer/instance.js
 
   expire:
-    image: gcr.io/ucdlib-pubreg/casita-a6t:v0.0.1-alpha
+    image: gcr.io/ucdlib-pubreg/casita-a6t-controller:v0.0.1-alpha
     env_file:
       - .env
     command: node expire/instance.js
 
   init:
-    image: gcr.io/ucdlib-pubreg/casita-a6t:v0.0.1-alpha
+    image: gcr.io/ucdlib-pubreg/casita-a6t-controller:v0.0.1-alpha
     env_file:
       - .env
     command: node init
 
   decoder:
-    image: gcr.io/ucdlib-pubreg/casita-a6t-decoder:v0.0.1-alpha
+    image: {{CASITA_DECODER_IMAGE_NAME}}:v0.0.1-alpha
     env_file:
       - .env
     volumes:
