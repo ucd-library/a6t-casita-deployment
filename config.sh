@@ -30,6 +30,7 @@ APP_VERSION=v0.0.1-alpha${BUILD_NUM}
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
 A6T_TAG=main
+BRANCH=test123
 
 ##
 # Repositories

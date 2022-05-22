@@ -9,46 +9,38 @@ set -e
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $ROOT_DIR/../templates
 
-source ../config.sh
-
-# generate main dc file
-content=$(cat deployment.yaml)
-for key in $(compgen -v); do
-  if [[ $key == "COMP_WORDBREAKS" || $key == "content" ]]; then
-    continue;
-  fi
-  escaped=$(printf '%s\n' "${!key}" | sed -e 's/[\/&]/\\&/g')
-  content=$(echo "$content" | sed "s/{{$key}}/${escaped}/g") 
-done
-echo "$content" > ../docker-compose.yaml
-
-# generate local development dc file
-content=$(cat local-dev.yaml)
-export LOCAL_BUILD=true
-source ../config.sh
-
-for key in $(compgen -v); do
-  if [[ $key == "COMP_WORDBREAKS" || $key == "content" ]]; then
-    continue;
-  fi
-  escaped=$(printf '%s\n' "${!key}" | sed -e 's/[\/&]/\\&/g')
-  content=$(echo "$content" | sed "s/{{$key}}/${escaped}/g") 
-done
-if [ ! -d "../a6t-casita-local-dev" ]; then
-  mkdir ../a6t-casita-local-dev
+if ! command -v cork-templates &> /dev/null
+then
+    echo -e "\nThe cork-template command could not be found.\nInstall via \"npm install -g @ucd-lib/cork-template\"\n"
+    exit -1
 fi
 
-echo "$content" > ../a6t-casita-local-dev/docker-compose.yaml
+# generate main dc file
+cork-template \
+  -c ../config.sh \
+  -t ../templates/deployment.yaml \
+  -o ../docker-compose.yaml
+
+# generate local development dc file
+cork-template \
+  -c ../config.sh \
+  -t ../templates/local-dev.yaml \
+  -o ../a6t-casita-local-dev/docker-compose.yaml
 
 # generate local helm values files
-content=$(cat airflow-values.yaml)
-echo "airflow-values.yaml (helm)"
-for key in $(compgen -v); do
-  if [[ $key == "COMP_WORDBREAKS" || $key == "content" ]]; then
-    continue;
-  fi
-  escaped=$(printf '%s\n' "${!key}" | sed -e 's/[\/&]/\\&/g')
-  content=$(echo "$content" | sed "s/{{$key}}/${escaped}/g") 
-done
+cork-template \
+  -c ../config.sh \
+  -t ../templates/airflow-values.yaml \
+  -o ../a6t-casita-local-dev/airflow-values.yaml
 
-echo "$content" > ../a6t-casita-local-dev/airflow-values.yaml
+cork-template \
+  -c ../config.sh \
+  -c ../templates/data/status.json \
+  -t ../templates/casita-services.yaml \
+  -o ../a6t-casita-local-dev/status-deployment.yaml
+
+cork-template \
+  -c ../config.sh \
+  -c ../templates/data/decoder.json \
+  -t ../templates/casita-services.yaml \
+  -o ../a6t-casita-local-dev/k8s/decoder-deployment.yaml

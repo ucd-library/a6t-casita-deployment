@@ -1,0 +1,4 @@
+{
+  "SERVICE_NAME" : "decoder",
+  "COMMAND" : "/casita/services/nodejs/decoder/run.sh"
+}

@@ -2,7 +2,7 @@ version: '3'
 services:
 
   zookeeper:
-    image: {{ZOOKEEPER_IMAGE_NAME}}:{{ZOOKEEPER_TAG}}
+    image: :
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
@@ -10,7 +10,7 @@ services:
       - zookeeper-datalog:/datalog
 
   kafka:
-    image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
+    image: :
     env_file:
       - .env
     environment:
@@ -24,7 +24,7 @@ services:
       - "zookeeper"
 
   redis:
-    image: {{REDIS_IMAGE_NAME}}:{{REDIS_TAG}}
+    image: :
     volumes:
       - redis-data:/data
 
@@ -47,7 +47,7 @@ services:
     command: node init
 
   decoder:
-    image: {{CASITA_DECODER_IMAGE_NAME}}:v0.0.1-alpha
+    image: :v0.0.1-alpha
     env_file:
       - .env
     volumes:

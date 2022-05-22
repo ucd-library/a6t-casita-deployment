@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{SERVICE_NAME}}-deployment
+spec:
+  selector:
+    matchLabels:
+      app:  {{SERVICE_NAME}}-deployment
+  template:
+    metadata:
+      labels:
+        app:  {{SERVICE_NAME}}-deployment
+    spec:
+      containers:
+      - name: {{SERVICE_NAME}}-deployment
+        image: {{CASITA_IMAGE_NAME_TAG}}
+        imagePullPolicy: Always
+        {{#if COMMAND}}
+        command: ["{{COMMAND}}"]
+        {{/if}}
+        env:
+        - name: INSTANCE_ENV
+          value: "{{BRANCH}}"
+        - name: NFS_ROOT
+          value: /storage/nfs
+        {{#each env}}
+        - name: {{name}}
+          value: "{{value}}"
+        {{/each}}
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "32Mi"
+            cpu: "100m"
+        volumeMounts:
+        - mountPath: /storage/nfs
+          name: nfspsc
+      volumes:
+      - name: nfspsc
+        persistentVolumeClaim:
+          claimName: nfs-persistent-storage-claim
+          readOnly: false
+      {{#if nodeSelector}}
+      nodeSelector:
+        {{#if intendedfor}}
+        intendedfor: krm-services
+        {{/if}}
+      {{/if}}

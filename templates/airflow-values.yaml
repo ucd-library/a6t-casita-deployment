@@ -1,10 +1,22 @@
 workers:
   extraVolumeMounts:
-  - name: local-block-ring-buffer
-    mountPath: /casita/tasks/nodejs/block-ring-buffer
+  - name: local-casita-tasks
+    mountPath: /casita/tasks
+    readOnly: true
+  - name: local-casita-node-commons
+    mountPath: /casita/node-commons
+    readOnly: true
+  - name: local-casita-services
+    mountPath: /casita/services
     readOnly: true
 
   extraVolumes:
-  - name: local-block-ring-buffer
+  - name: local-casita-tasks
     hostPath:
-      path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/tasks/nodejs/block-ring-buffer
+      path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/tasks
+  - name: local-casita-node-commons
+    hostPath:
+      path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/node-commons
+  - name: local-casita-services
+    hostPath:
+      path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/services
