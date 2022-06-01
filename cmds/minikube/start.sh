@@ -37,12 +37,17 @@ else
   echo "warning, not mounting fs, run as \"AUTO_EXTRAS=true ./cmds/minikube.sh\" to auto mount fs, bind ports and start dashboard" 
 fi
 
+# Create local helm config files and local deployment files
+../generate-deployment-files.sh
+
 # start helm
 echo "starting helm deployments" 
 
-./install-helm-repos.sh
-./deploy-airflow.sh
-./deploy-kafka.sh
+../k8s/install-helm-repos.sh
+../k8s/deploy-airflow.sh
+../k8s/deploy-kafka.sh
+
+cd $ROOT_DIR
 
 # helm uninstall airflow --namespace=airflow
 
