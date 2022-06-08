@@ -4,6 +4,7 @@
 # Setup your application deployment here
 ########################################
 
+# CONFIG_ROOT_DIR="${BASH_SOURCE[0]}"
 CONFIG_ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TMP_LOC=$(pwd)
 cd $CONFIG_ROOT_DIR/..
@@ -50,12 +51,14 @@ CASITA_TASKS_REPO_URL=$GITHUB_ORG_URL/${CASITA_TASKS_REPO_NAME}
 # Registery
 ##
 
-A6T_REG_HOST=gcr.io/ucdlib-pubreg
+if [[ -z $A6T_REG_HOST ]]; then
+  A6T_REG_HOST=gcr.io/ucdlib-pubreg
 
-# set local-dev tags used by 
-# local development docker-compose file
-if [[ ! -z $LOCAL_BUILD ]]; then
-  A6T_REG_HOST=localhost/local-dev
+  # set local-dev tags used by 
+  # local development docker-compose file
+  if [[ ! -z $LOCAL_BUILD ]]; then
+    A6T_REG_HOST=localhost/local-dev
+  fi
 fi
 
 ##
@@ -103,3 +106,12 @@ GIT_CLONE="$GIT clone"
 # if using pull.sh or the directory we will look for repositories (can by symlinks)
 # if local development
 REPOSITORY_DIR=repositories
+
+##
+# k8s
+##
+
+IMAGE_PULL_POLICY="Always"
+if [[ ! -z $LOCAL_BUILD ]]; then
+  IMAGE_PULL_POLICY="IfNotPresent"
+fi

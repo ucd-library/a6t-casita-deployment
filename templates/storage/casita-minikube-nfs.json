@@ -1,0 +1,5 @@
+{
+  "pvc-name" : "nfs-persistent-storage-claim",
+  "pv-name" : "nfs-persistent-storage",
+  "pv-size" : "25Gi"
+}

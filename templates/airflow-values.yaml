@@ -9,6 +9,8 @@ workers:
   - name: local-casita-services
     mountPath: /casita/services
     readOnly: true
+  - name: nfspsc
+    mountPath: /storage/nfs
 
   extraVolumes:
   - name: local-casita-tasks
@@ -20,3 +22,7 @@ workers:
   - name: local-casita-services
     hostPath:
       path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/services
+  - name: nfspsc
+    persistentVolumeClaim:
+      claimName: {{pvc-name}}
+      readOnly: false

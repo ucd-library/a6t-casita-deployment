@@ -30,8 +30,21 @@ cork-template \
 # generate local helm values files
 cork-template \
   -c ../config.sh \
+  -c ../templates/storage/casita-minikube-nfs.json \
   -t ../templates/airflow-values.yaml \
   -o ../a6t-casita-local-dev/airflow-values.yaml
+
+cork-template \
+  -c ../config.sh \
+  -c ../templates/storage/casita-minikube-nfs.json \
+  -t ../templates/minikube-nfs-storage.yaml \
+  -o ../a6t-casita-local-dev/k8s/minikube-nfs-storage.yaml
+
+cork-template \
+  -c ../config.sh \
+  -c ../templates/storage/casita-minikube-nfs.json \
+  -t ../templates/nfs-storage-claim.yaml \
+  -o ../a6t-casita-local-dev/k8s/nfs-storage-claim.yaml
 
 for file in ../templates/deployments/*.json; do 
   file=$(basename $file)
@@ -39,6 +52,7 @@ for file in ../templates/deployments/*.json; do
   cork-template \
     -c ../config.sh \
     -c ../templates/deployments/$file \
+    -c ../templates/storage/casita-minikube-nfs.json \
     -t ../templates/casita-services.yaml \
     -o ../a6t-casita-local-dev/k8s/$BASE-deployment.yaml
 done

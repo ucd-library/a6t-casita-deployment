@@ -14,9 +14,12 @@ spec:
       containers:
       - name: {{SERVICE_NAME}}-deployment
         image: {{CASITA_IMAGE_NAME_TAG}}
-        imagePullPolicy: Always
+        imagePullPolicy: {{IMAGE_PULL_POLICY}}
         {{#if COMMAND}}
-        command: ["{{COMMAND}}"]
+        command: ["{{{COMMAND}}}"]
+        {{/if}}
+        {{#if ARGS}}
+        args: {{{json ARGS}}}
         {{/if}}
         env:
         - name: INSTANCE_ENV
@@ -37,10 +40,28 @@ spec:
         volumeMounts:
         - mountPath: /storage/nfs
           name: nfspsc
+        - name: local-casita-tasks
+          mountPath: /casita/tasks
+          readOnly: true
+        - name: local-casita-node-commons
+          mountPath: /casita/node-commons
+          readOnly: true
+        - name: local-casita-services
+          mountPath: /casita/services
+          readOnly: true
       volumes:
+      - name: local-casita-tasks
+        hostPath:
+          path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/tasks
+      - name: local-casita-node-commons
+        hostPath:
+          path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/node-commons
+      - name: local-casita-services
+        hostPath:
+          path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/services
       - name: nfspsc
         persistentVolumeClaim:
-          claimName: nfs-persistent-storage-claim
+          claimName: {{pvc-name}}
           readOnly: false
       {{#if nodeSelector}}
       nodeSelector:

@@ -14,6 +14,7 @@ CASITA_A6T_REPO_HASH=$(git log -1 --pretty=%h)
 ##
 # NodeJS base task and services image
 ##
+echo "Building $CASITA_IMAGE_NAME_TAG"
 docker build \
   -t $CASITA_IMAGE_NAME_TAG \
   -t $CASITA_IMAGE_NAME:$CONTAINER_CACHE_TAG \
@@ -23,6 +24,7 @@ docker build \
   ${REPOSITORY_DIR}/${CASITA_TASKS_REPO_NAME}
 
 # a6t controller
+echo "Building $CASITA_A6T_IMAGE_NAME_TAG"
 docker build \
   -t $CASITA_A6T_IMAGE_NAME_TAG \
   -t $CASITA_A6T_IMAGE_NAME:$CONTAINER_CACHE_TAG \
@@ -33,6 +35,7 @@ docker build \
   ${REPOSITORY_DIR}/${CASITA_TASKS_REPO_NAME}
 
 # airflow worker
+echo "Building $CASITA_AIRFLOW_WORKER_NAME_TAG"
 docker build \
   -t $CASITA_AIRFLOW_WORKER_NAME_TAG \
   -t $CASITA_AIRFLOW_WORKER_NAME:$CONTAINER_CACHE_TAG \

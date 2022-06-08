@@ -8,11 +8,9 @@
 
 set -e
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-cd $ROOT_DIR
+cd $ROOT_DIR/../..
 
-source ../config.sh
+DEPLOYMENT_DIR=a6t-casita-local-dev/k8s
+cd $DEPLOYMENT_DIR
 
-# build argonaut first
-LOCAL_BUILD=true NODE_VERSION=16 ../$REPOSITORY_DIR/argonaut/build/run.sh
-
-LOCAL_BUILD=true ./build.sh
+kubectl apply -f nfs-storage-claim.yaml

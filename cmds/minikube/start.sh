@@ -44,18 +44,18 @@ fi
 echo "starting helm deployments" 
 
 ../k8s/install-helm-repos.sh
-../k8s/deploy-airflow.sh
-../k8s/deploy-kafka.sh
+LOCAL_BUILD=true ../k8s/deploy-airflow.sh || true
+../k8s/deploy-kafka.sh || true
 
 cd $ROOT_DIR
 
-# helm uninstall airflow --namespace=airflow
+# helm uninstall airflow 
 
 # port forward main web service
 if [[ $AUTO_EXTRAS == 'true' ]]; then
   echo "starting webserver port foward process in new tab" 
-  tab kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow
+  tab kubectl port-forward svc/airflow-webserver 8080:8080
 
   echo "opening terminal to airflow worker container"
-  kubectl exec --stdin --tty airflow-worker-0 --namespace=airflow -- bash 
+  kubectl exec --stdin --tty airflow-worker-0 -- bash 
 fi
