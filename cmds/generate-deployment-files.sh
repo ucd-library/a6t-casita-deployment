@@ -9,6 +9,9 @@ set -e
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $ROOT_DIR/../templates
 
+source $ROOT_DIR/../config.sh
+TEMPLATE_ROOT=../templates/k8s
+
 if ! command -v cork-template &> /dev/null
 then
     echo -e "\nThe cork-template command could not be found.\nInstall via \"npm install -g @ucd-lib/cork-template\"\n"
@@ -16,43 +19,66 @@ then
 fi
 
 # generate main dc file
-cork-template \
-  -c ../config.sh \
-  -t ../templates/deployment.yaml \
-  -o ../docker-compose.yaml
+# cork-template \
+#   -c ../config.sh \
+#   -t ../templates/deployment.yaml \
+#   -o ../docker-compose.yaml
 
 # generate local development dc file
-cork-template \
-  -c ../config.sh \
-  -t ../templates/local-dev.yaml \
-  -o ../a6t-casita-local-dev/docker-compose.yaml
+# cork-template \
+#   -c ../config.sh \
+#   -t ../templates/local-dev.yaml \
+#   -o ../a6t-casita-local-dev/docker-compose.yaml
 
-# generate local helm values files
-cork-template \
-  -c ../config.sh \
-  -c ../templates/storage/casita-minikube-nfs.json \
-  -t ../templates/airflow-values.yaml \
-  -o ../a6t-casita-local-dev/airflow-values.yaml
+if [[ $LOCAL_DEV == "true" ]]; then
 
-cork-template \
-  -c ../config.sh \
-  -c ../templates/storage/casita-minikube-nfs.json \
-  -t ../templates/minikube-nfs-storage.yaml \
-  -o ../a6t-casita-local-dev/k8s/minikube-nfs-storage.yaml
+  TEMPLATE_ROOT=$TEMPLATE_ROOT/local-dev
 
-cork-template \
-  -c ../config.sh \
-  -c ../templates/storage/casita-minikube-nfs.json \
-  -t ../templates/nfs-storage-claim.yaml \
-  -o ../a6t-casita-local-dev/k8s/nfs-storage-claim.yaml
-
-for file in ../templates/deployments/*.json; do 
-  file=$(basename $file)
-  BASE=$(basename -- $file .json)
+  # generate local helm values files
   cork-template \
     -c ../config.sh \
-    -c ../templates/deployments/$file \
-    -c ../templates/storage/casita-minikube-nfs.json \
-    -t ../templates/casita-services.yaml \
-    -o ../a6t-casita-local-dev/k8s/$BASE-deployment.yaml
-done
+    -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+    -t $TEMPLATE_ROOT/airflow-values.yaml \
+    -o $DEPLOYMENT_DIR/airflow-values.yaml
+
+  # Fake nfs storage
+  cork-template \
+    -c ../config.sh \
+    -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+    -t $TEMPLATE_ROOT/minikube-nfs-storage.yaml \
+    -o $DEPLOYMENT_DIR/minikube-nfs-storage.yaml
+
+  # Storage claim
+  cork-template \
+    -c ../config.sh \
+    -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+    -t $TEMPLATE_ROOT/nfs-storage-claim.yaml \
+    -o $DEPLOYMENT_DIR/nfs-storage-claim.yaml
+
+  # Decoder service
+  cork-template \
+      -c ../config.sh \
+      -c $TEMPLATE_ROOT/config/decoder.json \
+      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -t $TEMPLATE_ROOT/casita-services.yaml \
+      -o $DEPLOYMENT_DIR/decoder.yaml
+
+  # a6t services
+  for file in $TEMPLATE_ROOT/config/casita-a6t-*.json; do 
+    filename=$(basename $file)
+    BASE=$(basename -- $filename .json)
+    cork-template \
+      -c ../config.sh \
+      -c $file \
+      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -t $TEMPLATE_ROOT/casita-services.yaml \
+      -o $DEPLOYMENT_DIR/$BASE.yaml
+  done
+
+else
+
+  echo "TODO: implement me"
+
+fi
+
+

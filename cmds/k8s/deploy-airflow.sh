@@ -10,4 +10,4 @@ helm upgrade \
  --set images.airflow.repository=${CASITA_AIRFLOW_WORKER_NAME} \
  --set images.airflow.pullPolicy=${IMAGE_PULL_POLICY} \
  --set images.airflow.tag=${APP_VERSION} \
- -f $ROOT_DIR/../../a6t-casita-local-dev/airflow-values.yaml
+ -f $DEPLOYMENT_DIR/airflow-values.yaml

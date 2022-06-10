@@ -10,7 +10,7 @@ set -e
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $ROOT_DIR/../..
 
-DEPLOYMENT_DIR=a6t-casita-local-dev/k8s
-cd $DEPLOYMENT_DIR
+LOCAL_DEV=true
+source ./config.sh
 
-kubectl apply -f minikube-nfs-storage.yaml
+kubectl apply -f $DEPLOYMENT_DIR/minikube-nfs-storage.yaml

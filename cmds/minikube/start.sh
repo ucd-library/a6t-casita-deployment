@@ -4,6 +4,7 @@ set -e
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $ROOT_DIR
 
+export LOCAL_DEV=true
 source ../../config.sh
 
 function tab() {
@@ -44,7 +45,9 @@ fi
 echo "starting helm deployments" 
 
 ../k8s/install-helm-repos.sh
-LOCAL_BUILD=true ../k8s/deploy-airflow.sh || true
+./deploy-storage.sh || true
+../k8s/deploy-storage-claim.sh || true
+../k8s/deploy-airflow.sh || true
 ../k8s/deploy-kafka.sh || true
 
 cd $ROOT_DIR

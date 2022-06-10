@@ -29,19 +29,19 @@ services:
       - redis-data:/data
 
   composer:
-    image: gcr.io/ucdlib-pubreg/casita-a6t-controller:v0.0.1-alpha
+    image: localhost/local-dev/casita-a6t-controller:v0.0.1-alpha
     env_file:
       - .env
     command: node composer/instance.js
 
   expire:
-    image: gcr.io/ucdlib-pubreg/casita-a6t-controller:v0.0.1-alpha
+    image: localhost/local-dev/casita-a6t-controller:v0.0.1-alpha
     env_file:
       - .env
     command: node expire/instance.js
 
   init:
-    image: gcr.io/ucdlib-pubreg/casita-a6t-controller:v0.0.1-alpha
+    image: localhost/local-dev/casita-a6t-controller:v0.0.1-alpha
     env_file:
       - .env
     command: node init

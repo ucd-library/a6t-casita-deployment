@@ -10,7 +10,6 @@ set -e
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $ROOT_DIR/../..
 
-DEPLOYMENT_DIR=a6t-casita-local-dev/k8s
-cd $DEPLOYMENT_DIR
+source ./config.sh
 
-kubectl apply -f casita-a6t-composer-deployment.yaml
+kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-composer-deployment.yaml

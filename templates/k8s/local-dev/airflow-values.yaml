@@ -1,0 +1,53 @@
+workers:
+  extraVolumeMounts:
+  - name: local-airflow-dags
+    # Note: /opt/airflow is tied to the default AIRFLOW_HOME env
+    mountPath: /opt/airflow/dags
+    readOnly: true
+  - name: local-casita-tasks-nodejs
+    mountPath: /casita/tasks/nodejs
+    readOnly: true
+  - name: local-casita-tasks-cli
+    mountPath: /casita/tasks/cli
+    readOnly: true
+  - name: local-casita-node-commons
+    mountPath: /casita/node-commons
+    readOnly: true
+  - name: local-casita-services
+    mountPath: /casita/services
+    readOnly: true
+  - name: nfspsc
+    mountPath: /storage/nfs
+
+  extraVolumes:
+  - name: local-airflow-dags
+    hostPath:
+      path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/tasks/airflow-dags
+  - name: local-casita-tasks-cli
+    hostPath:
+      path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/tasks/cli
+  - name: local-casita-tasks-nodejs
+    hostPath:
+      path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/tasks/nodejs
+  - name: local-casita-node-commons
+    hostPath:
+      path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/node-commons
+  - name: local-casita-services
+    hostPath:
+      path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/services
+  - name: nfspsc
+    persistentVolumeClaim:
+      claimName: {{pvc-name}}
+      readOnly: false
+
+scheduler:
+  extraVolumeMounts:
+  - name: local-airflow-dags
+    # Note: /opt/airflow is tied to the default AIRFLOW_HOME env
+    mountPath: /opt/airflow/dags
+    readOnly: true
+
+  extraVolumes:
+  - name: local-airflow-dags
+    hostPath:
+      path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/tasks/airflow-dags

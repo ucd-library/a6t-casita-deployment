@@ -56,7 +56,7 @@ if [[ -z $A6T_REG_HOST ]]; then
 
   # set local-dev tags used by 
   # local development docker-compose file
-  if [[ ! -z $LOCAL_BUILD ]]; then
+  if [[ ! -z $LOCAL_DEV ]]; then
     A6T_REG_HOST=localhost/local-dev
   fi
 fi
@@ -111,7 +111,11 @@ REPOSITORY_DIR=repositories
 # k8s
 ##
 
+DEPLOYMENT_DIR=$CONFIG_ROOT_DIR/k8s
 IMAGE_PULL_POLICY="Always"
-if [[ ! -z $LOCAL_BUILD ]]; then
+LOCAL_DEV_DIR=a6t-casita-local-dev
+
+if [[ ! -z $LOCAL_DEV ]]; then
   IMAGE_PULL_POLICY="IfNotPresent"
+  DEPLOYMENT_DIR=$CONFIG_ROOT_DIR/$LOCAL_DEV_DIR/k8s
 fi
