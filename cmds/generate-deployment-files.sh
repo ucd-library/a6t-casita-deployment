@@ -58,10 +58,18 @@ if [[ $LOCAL_DEV == "true" ]]; then
   # Decoder service
   cork-template \
       -c ../config.sh \
-      -c $TEMPLATE_ROOT/config/decoder.json \
+      -c $TEMPLATE_ROOT/config/decoder.js \
       -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
-      -t $TEMPLATE_ROOT/casita-services.yaml \
+      -t $TEMPLATE_ROOT/casita-deployment.yaml \
       -o $DEPLOYMENT_DIR/decoder.yaml
+
+  # Product writer service
+  cork-template \
+      -c ../config.sh \
+      -c $TEMPLATE_ROOT/config/product-writer.json \
+      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -t $TEMPLATE_ROOT/casita-deployment.yaml \
+      -o $DEPLOYMENT_DIR/product-writer.yaml
 
   # a6t services
   for file in $TEMPLATE_ROOT/config/casita-a6t-*.json; do 
@@ -71,7 +79,7 @@ if [[ $LOCAL_DEV == "true" ]]; then
       -c ../config.sh \
       -c $file \
       -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
-      -t $TEMPLATE_ROOT/casita-services.yaml \
+      -t $TEMPLATE_ROOT/casita-deployment.yaml \
       -o $DEPLOYMENT_DIR/$BASE.yaml
   done
 

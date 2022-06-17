@@ -49,6 +49,7 @@ echo "starting helm deployments"
 ../k8s/deploy-storage-claim.sh || true
 ../k8s/deploy-airflow.sh || true
 ../k8s/deploy-kafka.sh || true
+../k8s/deploy-casita.sh || true
 
 cd $ROOT_DIR
 

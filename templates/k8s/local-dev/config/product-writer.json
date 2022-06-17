@@ -1,0 +1,5 @@
+{
+  "SERVICE_NAME" : "product-writer",
+  "COMMAND" : "bash",
+  "ARGS" : ["-c", "/casita/services/nodejs/goes-product-writer/index.js"]
+}
