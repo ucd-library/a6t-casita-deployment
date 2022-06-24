@@ -17,7 +17,7 @@ workers:
     mountPath: /casita/services
     readOnly: true
   - name: nfspsc
-    mountPath: /storage/nfs
+    mountPath: /storage/network
 
   extraVolumes:
   - name: local-airflow-dags

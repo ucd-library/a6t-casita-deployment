@@ -1,1 +1,1 @@
-helm install kafka bitnami/kafka
+helm install kafka bitnami/kafka --version 16.3.0

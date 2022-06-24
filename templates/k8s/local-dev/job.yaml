@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{name}}
+spec:
+  template:
+    spec:
+      containers:
+      {{#each containers}}
+      - name: {{name}}
+        image: {{image}}
+        command: {{{json command}}}
+        {{#if ../env}}
+        env:
+        {{#each ../env}}
+        - name: {{name}}
+          value: "{{value}}"
+        {{/each}}
+        {{/if}}
+        volumeMounts:
+        - name: ucdlib-service-init
+          mountPath: /etc/ucdlib-service-init
+          readOnly: true
+        {{#each ../volumes}}
+        - name: {{name}}
+          mountPath: {{mountPath}}
+        {{/each}}
+      {{/each}}
+      restartPolicy: Never
+      volumes:
+      {{#each volumes}}
+      - name: {{name}}
+        hostPath:
+          path: /hosthome/{{../HOME_HOST_PATH}}/{{hostPath}}
+          {{#if type}}
+          type: {{type}}
+          {{/if}}
+      {{/each}}
+      - name: ucdlib-service-init
+        hostPath:
+          path: /hosthome/{{HOME_HOST_PATH}}/{{CASITA_TASKS_REPO_NAME}}/services/init
+  backoffLimit: 3

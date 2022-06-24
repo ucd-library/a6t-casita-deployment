@@ -66,10 +66,17 @@ if [[ $LOCAL_DEV == "true" ]]; then
   # Product writer service
   cork-template \
       -c ../config.sh \
-      -c $TEMPLATE_ROOT/config/product-writer.json \
+      -c $TEMPLATE_ROOT/config/product-writer.js \
       -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
       -t $TEMPLATE_ROOT/casita-deployment.yaml \
       -o $DEPLOYMENT_DIR/product-writer.yaml
+
+  # Init service
+  cork-template \
+      -c ../config.sh \
+      -c $TEMPLATE_ROOT/config/init.js \
+      -t $TEMPLATE_ROOT/job.yaml \
+      -o $DEPLOYMENT_DIR/init.yaml
 
   # a6t services
   for file in $TEMPLATE_ROOT/config/casita-a6t-*.json; do 

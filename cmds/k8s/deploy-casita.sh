@@ -12,6 +12,7 @@ cd $ROOT_DIR/../..
 
 source ./config.sh
 
+kubectl apply -f $DEPLOYMENT_DIR/init.yaml
 kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-composer.yaml
 kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-expire.yaml
 kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-init.yaml
