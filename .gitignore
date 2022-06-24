@@ -1,6 +1,7 @@
 node_modules
 docker.key
 a6t-casita-local-dev
+casita-local-dev
 repositories
 
 *.pyc
