@@ -40,6 +40,10 @@ workers:
       claimName: {{pvc-name}}
       readOnly: false
 
+config:
+  api:
+    auth_backend: airflow.api.auth.backend.basic_auth
+
 scheduler:
   extraVolumeMounts:
   - name: local-airflow-dags

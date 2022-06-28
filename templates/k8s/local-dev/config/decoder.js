@@ -10,7 +10,7 @@ module.exports = config => ({
   "volumes": [
     {
       "name": "ssh-key", 
-      "hostPath": "a6t-casita-deployment/a6t-casita-local-dev/id_rsa",
+      "hostPath": "casita-deployment/casita-local-dev/id_rsa",
       "type": "File",
       "mountPath": "/root/.ssh/id_rsa"
     }

@@ -40,6 +40,12 @@ if [[ $LOCAL_DEV == "true" ]]; then
     -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
     -t $TEMPLATE_ROOT/airflow-values.yaml \
     -o $DEPLOYMENT_DIR/airflow-values.yaml
+  
+  cork-template \
+    -c ../config.sh \
+    -t $TEMPLATE_ROOT/redis-values.yaml \
+    -o $DEPLOYMENT_DIR/redis-values.yaml
+
 
   # Fake nfs storage
   cork-template \
@@ -79,9 +85,9 @@ if [[ $LOCAL_DEV == "true" ]]; then
       -o $DEPLOYMENT_DIR/init.yaml
 
   # a6t services
-  for file in $TEMPLATE_ROOT/config/casita-a6t-*.json; do 
+  for file in $TEMPLATE_ROOT/config/casita-a6t-*.js; do 
     filename=$(basename $file)
-    BASE=$(basename -- $filename .json)
+    BASE=$(basename -- $filename .js)
     cork-template \
       -c ../config.sh \
       -c $file \

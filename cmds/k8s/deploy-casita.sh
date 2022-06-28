@@ -12,9 +12,11 @@ cd $ROOT_DIR/../..
 
 source ./config.sh
 
+kubectl delete job init-services || true
 kubectl apply -f $DEPLOYMENT_DIR/init.yaml
+
 kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-composer.yaml
-kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-expire.yaml
-kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-init.yaml
+# kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-expire.yaml
+# kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-init.yaml
 kubectl apply -f $DEPLOYMENT_DIR/decoder.yaml
 kubectl apply -f $DEPLOYMENT_DIR/product-writer.yaml

@@ -20,7 +20,9 @@ EOF
 }
 
 # start minikube (k8s)
-minikube start
+minikube start \
+  --memory=12g \
+  --cpus=6 \
 
 # mount home directory into minikube space
 # https://minikube.sigs.k8s.io/docs/handbook/mount/
@@ -41,6 +43,9 @@ fi
 # Create local helm config files and local deployment files
 ../generate-deployment-files.sh
 
+./set-secrets.sh
+cd $ROOT_DIR
+
 # start helm
 echo "starting helm deployments" 
 
@@ -49,6 +54,7 @@ echo "starting helm deployments"
 ../k8s/deploy-storage-claim.sh || true
 ../k8s/deploy-airflow.sh || true
 ../k8s/deploy-kafka.sh || true
+../k8s/deploy-redis.sh || true
 ../k8s/deploy-casita.sh || true
 
 cd $ROOT_DIR

@@ -35,6 +35,9 @@ spec:
           requests:
             memory: "32Mi"
             cpu: "100m"
+        envFrom:
+        - secretRef:
+            name: local-dev-secrets
         volumeMounts:
         - mountPath: /storage/network
           name: nfspsc

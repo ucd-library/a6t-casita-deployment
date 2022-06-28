@@ -15,7 +15,7 @@ module.exports = config => ({
   volumes: [
     {
       "name": "service-account-key", 
-      "hostPath": "a6t-casita-deployment/a6t-casita-local-dev/service-account.json",
+      "hostPath": "casita-deployment/casita-local-dev/service-account.json",
       "type": "File",
       "mountPath": "/etc/service-account.json"
     }
