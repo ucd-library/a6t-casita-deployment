@@ -43,7 +43,7 @@ fi
 # Create local helm config files and local deployment files
 ../generate-deployment-files.sh
 
-./set-secrets.sh
+./set-secrets.sh || true
 cd $ROOT_DIR
 
 # start helm
