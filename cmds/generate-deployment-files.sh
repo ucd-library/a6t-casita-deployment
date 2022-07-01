@@ -35,11 +35,11 @@ if [[ $LOCAL_DEV == "true" ]]; then
   TEMPLATE_ROOT=$TEMPLATE_ROOT/local-dev
 
   # generate local helm values files
-  cork-template \
-    -c ../config.sh \
-    -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
-    -t $TEMPLATE_ROOT/airflow-values.yaml \
-    -o $DEPLOYMENT_DIR/airflow-values.yaml
+  # cork-template \
+  #   -c ../config.sh \
+  #   -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+  #   -t $TEMPLATE_ROOT/airflow-values.yaml \
+  #   -o $DEPLOYMENT_DIR/airflow-values.yaml
   
   cork-template \
     -c ../config.sh \
@@ -83,6 +83,22 @@ if [[ $LOCAL_DEV == "true" ]]; then
       -c $TEMPLATE_ROOT/config/init.js \
       -t $TEMPLATE_ROOT/job.yaml \
       -o $DEPLOYMENT_DIR/init.yaml
+
+  # worker
+  cork-template \
+      -c ../config.sh \
+      -c $TEMPLATE_ROOT/config/casita-worker.js \
+      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -t $TEMPLATE_ROOT/casita-deployment.yaml \
+      -o $DEPLOYMENT_DIR/casita-worker.yaml
+
+  # postgres
+  cork-template \
+      -c ../config.sh \
+      -t $TEMPLATE_ROOT/postgres.yaml \
+      -o $DEPLOYMENT_DIR/postgres.yaml
+  cp $TEMPLATE_ROOT/postgres-service.yaml $DEPLOYMENT_DIR/postgres-service.yaml
+
 
   # a6t services
   for file in $TEMPLATE_ROOT/config/casita-a6t-*.js; do 

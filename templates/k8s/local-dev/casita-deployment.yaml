@@ -5,11 +5,11 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app:  {{SERVICE_NAME}}-template
+      app:  {{SERVICE_NAME}}
   template:
     metadata:
       labels:
-        app:  {{SERVICE_NAME}}-template
+        app:  {{SERVICE_NAME}}
     spec:
       containers:
       - name: {{SERVICE_NAME}}
@@ -82,4 +82,3 @@ spec:
         intendedfor: {{intendedfor}}
         {{/if}}
       {{/if}}
-{{OK}}

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      app:  postgres
+  template:
+    metadata:
+      labels:
+        app:  postgres
+    spec:
+      containers:
+      - name: postgres
+        image: {{CASITA_POSTGIS_IMAGE_NAME_TAG}}
+        imagePullPolicy: {{IMAGE_PULL_POLICY}}
+        env:
+        - name: INSTANCE_ENV
+          value: "{{BRANCH}}"
+        - name: PGDATA
+          value: "/var/lib/postgresql/data/pgdata"
+        resources:
+          limits:
+            memory: "3Gi"
+            cpu: "2"
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: postgres-persistent-storage
+          mountPath: /var/lib/postgresql/data
+      {{#if nodeSelector}}
+      nodeSelector:
+        {{#if intendedfor}}
+        intendedfor: {{intendedfor}}
+        {{/if}}
+      {{/if}}
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-persistent-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 25Gi
