@@ -34,17 +34,6 @@ docker build \
   -f ${REPOSITORY_DIR}/${CASITA_TASKS_REPO_NAME}/Dockerfile.init-services \
   ${REPOSITORY_DIR}/${CASITA_TASKS_REPO_NAME}
 
-# init kafka services
-echo "Building $CASITA_INIT_KAFAK_IMAGE_NAME_TAG"
-docker build \
-  -t $CASITA_INIT_KAFAK_IMAGE_NAME_TAG \
-  -t $CASITA_INIT_KAFAK_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  --build-arg INIT_KAFKA_BASE=${INIT_KAFKA_BASE_IMAGE} \
-  --build-arg NODE_BASE=${CASITA_IMAGE_NAME_TAG} \
-  --cache-from=$CASITA_INIT_KAFAK_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  -f ${REPOSITORY_DIR}/${CASITA_TASKS_REPO_NAME}/Dockerfile.init-services-kafka \
-  ${REPOSITORY_DIR}/${CASITA_TASKS_REPO_NAME}
-
 # a6t controller
 echo "Building $CASITA_A6T_IMAGE_NAME_TAG"
 docker build \
@@ -57,15 +46,13 @@ docker build \
   ${REPOSITORY_DIR}/${CASITA_TASKS_REPO_NAME}
 
 # postgis
-echo "Building $CASITA_A6T_IMAGE_NAME_TAG"
+echo "Building $CASITA_POSTGIS_IMAGE_NAME"
 docker build \
-  -t $CASITA_A6T_IMAGE_NAME_TAG \
-  -t $CASITA_A6T_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  --build-arg A6T_CONTROLLER_BASE=${A6T_IMAGE_NAME_TAG} \
-  --build-arg NODE_BASE=${CASITA_IMAGE_NAME_TAG} \
-  --cache-from=$CASITA_A6T_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  -f ${REPOSITORY_DIR}/${CASITA_TASKS_REPO_NAME}/Dockerfile.a6t-controller \
-  ${REPOSITORY_DIR}/${CASITA_TASKS_REPO_NAME}
+  -t $CASITA_POSTGIS_IMAGE_NAME_TAG \
+  -t $CASITA_POSTGIS_IMAGE_NAME:$CONTAINER_CACHE_TAG \
+  --cache-from=$CASITA_POSTGIS_IMAGE_NAME:$CONTAINER_CACHE_TAG \
+  -f ${REPOSITORY_DIR}/${CASITA_TASKS_REPO_NAME}/services/postgis/Dockerfile \
+  ${REPOSITORY_DIR}/${CASITA_TASKS_REPO_NAME}/services/postgis
 
 # airflow worker
 # echo "Building $CASITA_AIRFLOW_WORKER_NAME_TAG"

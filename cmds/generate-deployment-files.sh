@@ -80,9 +80,16 @@ if [[ $LOCAL_DEV == "true" ]]; then
   # Init service
   cork-template \
       -c ../config.sh \
-      -c $TEMPLATE_ROOT/config/init.js \
+      -c $TEMPLATE_ROOT/config/init-services.js \
       -t $TEMPLATE_ROOT/job.yaml \
-      -o $DEPLOYMENT_DIR/init.yaml
+      -o $DEPLOYMENT_DIR/init-services.yaml
+  # for debugging
+  cork-template \
+    -c ../config.sh \
+    -c $TEMPLATE_ROOT/config/init-services-deployment.js \
+    -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+    -t $TEMPLATE_ROOT/casita-deployment.yaml \
+    -o $DEPLOYMENT_DIR/init-services-deployment.yaml
 
   # worker
   cork-template \
@@ -91,6 +98,14 @@ if [[ $LOCAL_DEV == "true" ]]; then
       -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
       -t $TEMPLATE_ROOT/casita-deployment.yaml \
       -o $DEPLOYMENT_DIR/casita-worker.yaml
+
+  # rest api
+  cork-template \
+      -c ../config.sh \
+      -c $TEMPLATE_ROOT/config/casita-rest.js \
+      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -t $TEMPLATE_ROOT/casita-deployment.yaml \
+      -o $DEPLOYMENT_DIR/casita-rest.yaml
 
   # postgres
   cork-template \

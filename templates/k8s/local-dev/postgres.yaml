@@ -10,6 +10,8 @@ spec:
     metadata:
       labels:
         app:  postgres
+    replicas: 1
+    serviceName: postgres
     spec:
       containers:
       - name: postgres
