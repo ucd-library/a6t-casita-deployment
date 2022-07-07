@@ -70,7 +70,6 @@ NODE_VERSION=16
 # Container
 ##
 
-AIRFLOW_WORKER_IMAGE_NAME=apache/airflow:2.2.4
 INIT_KAFKA_BASE_IMAGE=gcr.io/ucdlib-pubreg/init-services-kafka:main
 INIT_BASE_IMAGE=gcr.io/ucdlib-pubreg/init-services:main
 

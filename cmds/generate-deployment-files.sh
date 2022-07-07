@@ -33,13 +33,6 @@ fi
 if [[ $LOCAL_DEV == "true" ]]; then
 
   TEMPLATE_ROOT=$TEMPLATE_ROOT/local-dev
-
-  # generate local helm values files
-  # cork-template \
-  #   -c ../config.sh \
-  #   -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
-  #   -t $TEMPLATE_ROOT/airflow-values.yaml \
-  #   -o $DEPLOYMENT_DIR/airflow-values.yaml
   
   cork-template \
     -c ../config.sh \
