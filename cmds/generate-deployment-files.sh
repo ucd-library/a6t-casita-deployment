@@ -100,6 +100,14 @@ if [[ $LOCAL_DEV == "true" ]]; then
       -t $TEMPLATE_ROOT/casita-deployment.yaml \
       -o $DEPLOYMENT_DIR/casita-rest.yaml
 
+  # rest api
+  cork-template \
+      -c ../config.sh \
+      -c $TEMPLATE_ROOT/config/casita-external-topics.js \
+      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -t $TEMPLATE_ROOT/casita-deployment.yaml \
+      -o $DEPLOYMENT_DIR/casita-external-topics.yaml
+
   # postgres
   cork-template \
       -c ../config.sh \
