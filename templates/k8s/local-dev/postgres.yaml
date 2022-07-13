@@ -6,12 +6,12 @@ spec:
   selector:
     matchLabels:
       app:  postgres
+  replicas: 1
+  serviceName: postgres
   template:
     metadata:
       labels:
         app:  postgres
-    replicas: 1
-    serviceName: postgres
     spec:
       containers:
       - name: postgres

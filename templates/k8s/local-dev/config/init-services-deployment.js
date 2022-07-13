@@ -5,7 +5,8 @@ module.exports = config => ({
   "ARGS" : ["-c", "tail -f /dev/null"],
   "env" : [
     {"name": "GOOGLE_APPLICATION_CREDENTIALS", "value": "/etc/service-account.json"},
-    {"name": "PG_DATABASE", "value": "casita"}
+    {"name": "PG_DATABASE", "value": "casita"},
+    {"name": "MAX_WORKERS", "value": "15"}
   ],
   volumes: [
     {

@@ -103,18 +103,26 @@ if [[ $LOCAL_DEV == "true" ]]; then
   # rest api
   cork-template \
       -c ../config.sh \
-      -c $TEMPLATE_ROOT/config/casita-external-topics.js \
+      -c $TEMPLATE_ROOT/config/external-topics.js \
       -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
       -t $TEMPLATE_ROOT/casita-deployment.yaml \
-      -o $DEPLOYMENT_DIR/casita-external-topics.yaml
+      -o $DEPLOYMENT_DIR/external-topics.yaml
+
+  cork-template \
+      -c $TEMPLATE_ROOT/config/external-topics-service.json \
+      -t $TEMPLATE_ROOT/service.yaml \
+      -o $DEPLOYMENT_DIR/external-topics-service.yaml
 
   # postgres
   cork-template \
       -c ../config.sh \
       -t $TEMPLATE_ROOT/postgres.yaml \
       -o $DEPLOYMENT_DIR/postgres.yaml
-  cp $TEMPLATE_ROOT/postgres-service.yaml $DEPLOYMENT_DIR/postgres-service.yaml
 
+  cork-template \
+      -c $TEMPLATE_ROOT/config/postgres-service.json \
+      -t $TEMPLATE_ROOT/service.yaml \
+      -o $DEPLOYMENT_DIR/postgres-service.yaml
 
   # a6t services
   for file in $TEMPLATE_ROOT/config/casita-a6t-*.js; do 

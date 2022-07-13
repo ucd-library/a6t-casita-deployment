@@ -22,7 +22,7 @@ EOF
 # start minikube (k8s)
 minikube start \
   --memory=12g \
-  --cpus=6 \
+  --cpus=6
 
 # mount home directory into minikube space
 # https://minikube.sigs.k8s.io/docs/handbook/mount/
@@ -54,6 +54,7 @@ echo "starting helm deployments"
 ../k8s/deploy-storage-claim.sh || true
 ../k8s/deploy-kafka.sh || true
 ../k8s/deploy-redis.sh || true
+../k8s/deploy-postgres.sh || true
 ../k8s/deploy-casita.sh || true
 
 cd $ROOT_DIR

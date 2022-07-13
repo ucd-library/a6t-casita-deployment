@@ -19,6 +19,7 @@ kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-composer.yaml
 kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-expire.yaml
 kubectl apply -f $DEPLOYMENT_DIR/casita-worker.yaml
 kubectl apply -f $DEPLOYMENT_DIR/casita-rest.yaml
-kubectl apply -f $DEPLOYMENT_DIR/casita-external-topics.yaml
+kubectl apply -f $DEPLOYMENT_DIR/external-topics.yaml
+kubectl apply -f $DEPLOYMENT_DIR/external-topics-service.yaml
 kubectl apply -f $DEPLOYMENT_DIR/decoder.yaml
 kubectl apply -f $DEPLOYMENT_DIR/product-writer.yaml

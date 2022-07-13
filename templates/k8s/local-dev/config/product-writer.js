@@ -1,6 +1,6 @@
 module.exports = config => ({
   "SERVICE_NAME" : "product-writer",
   "COMMAND" : "bash",
-  "ARGS" : ["-c", "node /casita/services/nodejs/goes-product-writer/index.js"]
+  "ARGS" : ["-c", "npm run product-writer"]
   // "ARGS" : ["-c", "tail -f /dev/null"]
 });
