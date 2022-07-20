@@ -43,14 +43,14 @@ if [[ $LOCAL_DEV == "true" ]]; then
   # Fake nfs storage
   cork-template \
     -c ../config.sh \
-    -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+    -c $TEMPLATE_ROOT/config/minikube-nfs.json \
     -t $TEMPLATE_ROOT/minikube-nfs-storage.yaml \
     -o $DEPLOYMENT_DIR/minikube-nfs-storage.yaml
 
   # Storage claim
   cork-template \
     -c ../config.sh \
-    -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+    -c $TEMPLATE_ROOT/config/minikube-nfs.json \
     -t $TEMPLATE_ROOT/nfs-storage-claim.yaml \
     -o $DEPLOYMENT_DIR/nfs-storage-claim.yaml
 
@@ -58,7 +58,7 @@ if [[ $LOCAL_DEV == "true" ]]; then
   cork-template \
       -c ../config.sh \
       -c $TEMPLATE_ROOT/config/decoder.js \
-      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -c $TEMPLATE_ROOT/config/minikube-nfs.json \
       -t $TEMPLATE_ROOT/casita-deployment.yaml \
       -o $DEPLOYMENT_DIR/decoder.yaml
 
@@ -66,7 +66,7 @@ if [[ $LOCAL_DEV == "true" ]]; then
   cork-template \
       -c ../config.sh \
       -c $TEMPLATE_ROOT/config/product-writer.js \
-      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -c $TEMPLATE_ROOT/config/minikube-nfs.json \
       -t $TEMPLATE_ROOT/casita-deployment.yaml \
       -o $DEPLOYMENT_DIR/product-writer.yaml
 
@@ -80,33 +80,40 @@ if [[ $LOCAL_DEV == "true" ]]; then
   cork-template \
     -c ../config.sh \
     -c $TEMPLATE_ROOT/config/init-services-deployment.js \
-    -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+    -c $TEMPLATE_ROOT/config/minikube-nfs.json \
     -t $TEMPLATE_ROOT/casita-deployment.yaml \
     -o $DEPLOYMENT_DIR/init-services-deployment.yaml
 
   # worker
   cork-template \
       -c ../config.sh \
-      -c $TEMPLATE_ROOT/config/casita-worker.js \
-      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -c $TEMPLATE_ROOT/config/worker.js \
+      -c $TEMPLATE_ROOT/config/minikube-nfs.json \
       -t $TEMPLATE_ROOT/casita-deployment.yaml \
-      -o $DEPLOYMENT_DIR/casita-worker.yaml
+      -o $DEPLOYMENT_DIR/worker.yaml
 
   # rest api
   cork-template \
       -c ../config.sh \
-      -c $TEMPLATE_ROOT/config/casita-rest.js \
-      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -c $TEMPLATE_ROOT/config/rest.js \
+      -c $TEMPLATE_ROOT/config/minikube-nfs.json \
       -t $TEMPLATE_ROOT/casita-deployment.yaml \
-      -o $DEPLOYMENT_DIR/casita-rest.yaml
+      -o $DEPLOYMENT_DIR/rest.yaml
 
   # rest api
   cork-template \
       -c ../config.sh \
       -c $TEMPLATE_ROOT/config/external-topics.js \
-      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -c $TEMPLATE_ROOT/config/minikube-nfs.json \
       -t $TEMPLATE_ROOT/casita-deployment.yaml \
       -o $DEPLOYMENT_DIR/external-topics.yaml
+
+  cork-template \
+      -c ../config.sh \
+      -c $TEMPLATE_ROOT/config/nfs-expire.js \
+      -c $TEMPLATE_ROOT/config/minikube-nfs.json \
+      -t $TEMPLATE_ROOT/casita-deployment.yaml \
+      -o $DEPLOYMENT_DIR/nfs-expire.yaml
 
   cork-template \
       -c $TEMPLATE_ROOT/config/external-topics-service.json \
@@ -125,13 +132,13 @@ if [[ $LOCAL_DEV == "true" ]]; then
       -o $DEPLOYMENT_DIR/postgres-service.yaml
 
   # a6t services
-  for file in $TEMPLATE_ROOT/config/casita-a6t-*.js; do 
+  for file in $TEMPLATE_ROOT/config/a6t-*.js; do 
     filename=$(basename $file)
     BASE=$(basename -- $filename .js)
     cork-template \
       -c ../config.sh \
       -c $file \
-      -c $TEMPLATE_ROOT/config/casita-minikube-nfs.json \
+      -c $TEMPLATE_ROOT/config/minikube-nfs.json \
       -t $TEMPLATE_ROOT/casita-deployment.yaml \
       -o $DEPLOYMENT_DIR/$BASE.yaml
   done

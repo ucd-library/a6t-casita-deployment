@@ -1,4 +1,0 @@
-{
-  "SERVICE_NAME" : "status",
-  "COMMAND" : "node /casita/services/nodejs/status/index.js"
-}

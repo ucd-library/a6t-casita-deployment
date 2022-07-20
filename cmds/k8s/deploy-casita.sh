@@ -15,11 +15,12 @@ source ./config.sh
 kubectl delete job init-services || true
 kubectl apply -f $DEPLOYMENT_DIR/init-services.yaml
 
-kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-composer.yaml
-kubectl apply -f $DEPLOYMENT_DIR/casita-a6t-expire.yaml
-kubectl apply -f $DEPLOYMENT_DIR/casita-worker.yaml
-kubectl apply -f $DEPLOYMENT_DIR/casita-rest.yaml
+kubectl apply -f $DEPLOYMENT_DIR/a6t-composer.yaml
+kubectl apply -f $DEPLOYMENT_DIR/a6t-expire.yaml
+kubectl apply -f $DEPLOYMENT_DIR/worker.yaml
+kubectl apply -f $DEPLOYMENT_DIR/rest.yaml
 kubectl apply -f $DEPLOYMENT_DIR/external-topics.yaml
 kubectl apply -f $DEPLOYMENT_DIR/external-topics-service.yaml
 kubectl apply -f $DEPLOYMENT_DIR/decoder.yaml
 kubectl apply -f $DEPLOYMENT_DIR/product-writer.yaml
+kubectl apply -f $DEPLOYMENT_DIR/nfs-expire.yaml
