@@ -1,0 +1,13 @@
+# https://cloud.google.com/filestore/docs/accessing-fileshares
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{FILESTORE_VOLUME_NAME}}
+spec:
+  capacity:
+    storage: 1T
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: {{FILESTORE_PATH}}
+    server: {{FILESTORE_IP}}

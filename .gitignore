@@ -1,8 +1,12 @@
 node_modules
-docker.key
+ssh.key
+ssh.username
+jwt-secret
+service-account.json
 a6t-casita-local-dev
 casita-local-dev
 repositories
+/k8s
 
 *.pyc
 __pycache__

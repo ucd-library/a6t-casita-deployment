@@ -51,7 +51,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./docker.key:/root/.ssh/id_rsa
+      - ./ssh.key:/root/.ssh/id_rsa
     environment:
       - GRB_FILE=decoded
     restart: always

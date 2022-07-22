@@ -12,4 +12,4 @@ cd $ROOT_DIR/../..
 
 source ./config.sh
 
-kubectl apply -f $DEPLOYMENT_DIR/nfs-storage-claim.yaml
+kubectl apply -f $DEPLOYMENT_DIR/nfs-volume-claim.yaml

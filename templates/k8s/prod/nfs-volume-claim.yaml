@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{FILESTORE_VOLUME_NAME}}-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: {{FILESTORE_VOLUME_NAME}}
+  resources:
+    requests:
+      storage: 1T

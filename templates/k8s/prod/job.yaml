@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{name}}
+spec:
+  template:
+    spec:
+      containers:
+      {{#each containers}}
+      - name: {{name}}
+        image: {{image}}
+        command: {{{json command}}}
+        env:
+        - name: K8S_ENV
+          value: "{{../K8S_ENV}}"
+        - name: K8S_LOG_LEVEL
+          value: "{{../K8S_LOG_LEVEL}}"
+        {{#each ../env}}
+        - name: {{name}}
+          value: "{{value}}"
+        {{/each}}
+        volumeMounts:
+        - mountPath: /storage/nfs
+          name: nfspsc
+        - mountPath: /etc/google
+          name: service-account
+      {{/each}}
+      restartPolicy: Never
+      volumes:
+      - name: nfspsc
+        persistentVolumeClaim:
+          claimName: {{FILESTORE_VOLUME_NAME}}-claim
+          readOnly: false
+      - name: service-account
+        secret:
+          secretName: service-account
+  backoffLimit: 3

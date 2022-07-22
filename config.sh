@@ -31,7 +31,8 @@ APP_VERSION=v0.0.1-alpha${BUILD_NUM}
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
 A6T_TAG=main
-BRANCH=test123
+CASITA_TASKS_TAG=main
+BRANCH=main
 
 ##
 # Repositories
@@ -56,10 +57,12 @@ if [[ -z $A6T_REG_HOST ]]; then
 
   # set local-dev tags used by 
   # local development docker-compose file
-  if [[ ! -z $LOCAL_DEV ]]; then
+  if [[ $LOCAL_DEV == 'true' ]]; then
     A6T_REG_HOST=localhost/local-dev
   fi
 fi
+
+DOCKER_CACHE_TAG=latest
 
 ##
 # NodeJS
@@ -81,25 +84,22 @@ A6T_IMAGE_NAME=$A6T_REG_HOST/argonaut
 CASITA_IMAGE_NAME=$A6T_REG_HOST/casita
 CASITA_A6T_IMAGE_NAME=$A6T_REG_HOST/casita-a6t-controller
 CASITA_INIT_IMAGE_NAME=$A6T_REG_HOST/casita-init
-CASITA_INIT_KAFAK_IMAGE_NAME=$A6T_REG_HOST/casita-init-kafka
 CASITA_POSTGIS_IMAGE_NAME=$A6T_REG_HOST/casita-postgis
 
 A6T_IMAGE_NAME_TAG=$A6T_IMAGE_NAME:$A6T_TAG
 CASITA_IMAGE_NAME_TAG=$CASITA_IMAGE_NAME:$APP_VERSION
 CASITA_A6T_IMAGE_NAME_TAG=$CASITA_A6T_IMAGE_NAME:$APP_VERSION
 CASITA_INIT_IMAGE_NAME_TAG=$CASITA_INIT_IMAGE_NAME:$APP_VERSION
-CASITA_INIT_KAFAK_IMAGE_NAME_TAG=$CASITA_INIT_KAFAK_IMAGE_NAME:$APP_VERSION
 CASITA_POSTGIS_IMAGE_NAME_TAG=$CASITA_POSTGIS_IMAGE_NAME:$APP_VERSION
 
 ALL_DOCKER_BUILD_IMAGES=( $A6T_IMAGE_NAME \
  $CASITA_A6T_IMAGE_NAME $CASITA_POSTGIS_IMAGE_NAME 
- $CASITA_INIT_IMAGE_NAME $CASITA_INIT_KAFAK_IMAGE_NAME )
+ $CASITA_INIT_IMAGE_NAME )
 
 ALL_DOCKER_BUILD_IMAGE_TAGS=( $A6T_IMAGE_NAME_TAG \
  $CASITA_A6T_IMAGE_NAME_TAG \
  $CASITA_POSTGIS_IMAGE_NAME_TAG \
- $CASITA_INIT_IMAGE_NAME_TAG \
- $CASITA_INIT_KAFAK_IMAGE_NAME_TAG )
+ $CASITA_INIT_IMAGE_NAME_TAG  )
 
 ##
 # Git
@@ -120,11 +120,33 @@ REPOSITORY_DIR=repositories
 # k8s
 ##
 
+# https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
+if [[ $LOCAL_DEV != 'true' ]]; then
+  export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+fi
+
 DEPLOYMENT_DIR=$CONFIG_ROOT_DIR/k8s
 IMAGE_PULL_POLICY="Always"
 LOCAL_DEV_DIR=casita-local-dev
 
-if [[ ! -z $LOCAL_DEV ]]; then
+if [[ $LOCAL_DEV == 'true' ]]; then
   IMAGE_PULL_POLICY="IfNotPresent"
   DEPLOYMENT_DIR=$CONFIG_ROOT_DIR/$LOCAL_DEV_DIR/k8s
 fi
+
+GKE_CLUSTER_NAME=casita
+GC_PROJECT_ID=casita-298223
+GC_ZONE=us-central1-c
+K8S_ENV=gce-prod
+# setting this to "log" generates a lot of logs,
+# causes a pick spike in GC costs
+K8S_LOG_LEVEL=warn
+
+FILESTORE_PATH=/casita
+FILESTORE_IP=10.194.222.218
+FILESTORE_VOLUME_NAME=nfs-persistent-storage
+
+API_SERVICE_INTERNAL_IP=10.128.0.57
+# H2_SERVICE_INTERNAL_IP=10.128.0.27
+# WS_SERVICE_INTERNAL_IP=10.128.0.16
+# OPEN_KAFKA_WS_SERVICE_INTERNAL_IP=10.128.0.38
