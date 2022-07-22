@@ -35,10 +35,10 @@ spec:
             memory: "256Mi"
             cpu: "1000m"
           requests:
-            memory: "32Mi"
-            cpu: "100m"
+            memory: "128Mi"
+            cpu: "250m"
         volumeMounts:
-        - mountPath: /storage/nfs
+        - mountPath: /storage/network
           name: nfspsc
         - mountPath: /etc/google
           name: service-account

@@ -15,19 +15,26 @@ steps:
   - name: gcr.io/cloud-builders/git
     entrypoint: "bash"
     args: ["-c", "./cmds/clone.sh"]
+    env:
+      - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
 
   - name: gcr.io/cloud-builders/docker
     entrypoint: "bash"
     args: ["-c", "./cmds/pull.sh"]
+    env:
+      - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
 
   - name: gcr.io/cloud-builders/docker
     entrypoint: "bash"
     args: ["-c", "./cmds/build.sh"]
     env: 
       - 'GCLOUD_BUILD=true'
+      - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
 
   - name: gcr.io/cloud-builders/docker
     entrypoint: "bash"
     args: ["-c", "./cmds/push.sh"]
+    env:
+      - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
 
 timeout: 1800s

@@ -140,7 +140,7 @@ GC_ZONE=us-central1-c
 K8S_ENV=gce-prod
 # setting this to "log" generates a lot of logs,
 # causes a pick spike in GC costs
-K8S_LOG_LEVEL=warn
+K8S_LOG_LEVEL=info
 
 FILESTORE_PATH=/casita
 FILESTORE_IP=10.194.222.218

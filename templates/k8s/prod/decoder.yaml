@@ -27,12 +27,12 @@ spec:
         - name: K8S_LOG_LEVEL
           value: "{{K8S_LOG_LEVEL}}"
         - name: GRB_FILE
-          value: "decoder"
+          value: "decoded"
         - name: SSH_KEY_USERNAME
           valueFrom:
             secretKeyRef:
               name: decoder-ssh-user
-              key: ssh-username
+              key: value
         {{#each env}}
         - name: {{name}}
           value: "{{value}}"
@@ -45,7 +45,7 @@ spec:
             memory: "32Mi"
             cpu: "100m"
         volumeMounts:
-        - mountPath: /storage/nfs
+        - mountPath: /storage/network
           name: nfspsc
         {{#each volumes}}
         - name: {{name}}
@@ -66,12 +66,12 @@ spec:
         - name: K8S_LOG_LEVEL
           value: "{{K8S_LOG_LEVEL}}"
         - name: GRB_FILE
-          value: "secdecoder"
+          value: "secdecoded"
         - name: SSH_KEY_USERNAME
           valueFrom:
             secretKeyRef:
               name: decoder-ssh-user
-              key: ssh-username
+              key: value
         {{#each env}}
         - name: {{name}}
           value: "{{value}}"
@@ -84,7 +84,7 @@ spec:
             memory: "32Mi"
             cpu: "100m"
         volumeMounts:
-        - mountPath: /storage/nfs
+        - mountPath: /storage/network
           name: nfspsc
         {{#each volumes}}
         - name: {{name}}

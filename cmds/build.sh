@@ -9,7 +9,12 @@ ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $ROOT_DIR/..
 source config.sh
 
-CASITA_A6T_REPO_HASH=$(git log -1 --pretty=%h)
+# CASITA_A6T_REPO_HASH=$(cd $ROOT_DIR/$REPOSITORY_DIR/$A6T_REPO_NAME && log -1 --pretty=%h)
+
+# build argonaut first
+# TODO: move this to pre-built
+NODE_VERSION=$NODE_VERSION $REPOSITORY_DIR/argonaut/build/run.sh
+
 
 ##
 # NodeJS base task and services image

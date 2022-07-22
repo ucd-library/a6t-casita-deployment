@@ -216,6 +216,13 @@ else
       -t $TEMPLATE_ROOT/deployment.yaml \
       -o $DEPLOYMENT_DIR/rest.yaml
 
+  # rest api service
+  cork-template \
+      -c ../config.sh \
+      -c $TEMPLATE_ROOT/config/rest-service.json \
+      -t $TEMPLATE_ROOT/rest-service.yaml \
+      -o $DEPLOYMENT_DIR/rest-service.yaml
+
   # external topics api
   cork-template \
       -c ../config.sh \

@@ -14,16 +14,17 @@ module.exports = config => ({
     command : ['npm', 'run', 'postgres']
   }],
   "env" : [
-    {"name": "GOOGLE_APPLICATION_CREDENTIALS", "value": "/etc/service-account.json"},
+    {"name": "GOOGLE_APPLICATION_CREDENTIALS", "value": "/etc/google/service-account.json"},
     {"name": "PG_DATABASE", "value": "casita"},
-    {"name": "MAX_WORKERS", "value": "15"}
+    {"name": "PG_HOST", "value": "postgres-service"},
+    {"name": "MAX_WORKERS", "value": "36"}
   ],
   volumes: [
     {
       "name": "service-account-key", 
       "hostPath": "casita-deployment/casita-local-dev/service-account.json",
       "type": "File",
-      "mountPath": "/etc/service-account.json"
+      "mountPath": "/etc/google/service-account.json"
     }
   ]
 })

@@ -13,6 +13,6 @@ cd $ROOT_DIR
 source ../config.sh
 
 # build argonaut first
-LOCAL_DEV=true NODE_VERSION=$NODE_VERSION ../$REPOSITORY_DIR/argonaut/build/run.sh
+# LOCAL_DEV=true NODE_VERSION=$NODE_VERSION ../$REPOSITORY_DIR/argonaut/build/run.sh
 
 LOCAL_DEV=true ./build.sh
