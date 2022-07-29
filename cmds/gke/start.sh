@@ -4,8 +4,10 @@ set -e
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $ROOT_DIR
 
-export LOCAL_DEV=true
 source ../../config.sh
+
+gcloud config set project ${GC_PROJECT_ID}
+./setup-kubectl.sh
 
 ../k8s/install-helm-repos.sh
 ./deploy-storage.sh || true

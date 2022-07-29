@@ -12,6 +12,8 @@ spec:
         command: {{{json command}}}
         {{#if ../env}}
         env:
+        - name : "GOOGLE_APPLICATION_CREDENTIALS"
+          value : "/etc/google/service-account.json"
         {{#each ../env}}
         - name: {{name}}
           value: "{{value}}"
@@ -21,6 +23,8 @@ spec:
         - name: ucdlib-service-init
           mountPath: /etc/ucdlib-service-init
           readOnly: true
+        - mountPath: /etc/google
+          name: service-account
         {{#each ../volumes}}
         - name: {{name}}
           mountPath: {{mountPath}}
@@ -28,6 +32,9 @@ spec:
       {{/each}}
       restartPolicy: Never
       volumes:
+      - name: service-account
+        secret:
+          secretName: service-account
       {{#each volumes}}
       - name: {{name}}
         hostPath:

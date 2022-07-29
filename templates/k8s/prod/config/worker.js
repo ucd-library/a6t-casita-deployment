@@ -3,6 +3,9 @@ module.exports = config => ({
   "SERVICE_NAME" : "worker",
   "COMMAND" : "bash",
   "ARGS" : ["-c", "npm run worker"],
+  "nodeSelector" : {
+    "intendedfor" : "worker",
+  },
   "env" : [
     // {"name": "LOG_LEVEL", "value": "debug"}
   ]

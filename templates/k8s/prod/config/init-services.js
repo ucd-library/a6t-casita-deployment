@@ -17,7 +17,7 @@ module.exports = config => ({
     {"name": "GOOGLE_APPLICATION_CREDENTIALS", "value": "/etc/google/service-account.json"},
     {"name": "PG_DATABASE", "value": "casita"},
     {"name": "PG_HOST", "value": "postgres-service"},
-    {"name": "MAX_WORKERS", "value": "36"}
+    {"name": "MAX_WORKERS", "value": "48"}
   ],
   volumes: [
     {

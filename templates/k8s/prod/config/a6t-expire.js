@@ -3,6 +3,9 @@ module.exports = config => ({
   "SERVICE_NAME" : "a6t-expire",
   "COMMAND" : "bash",
   "ARGS" : ["-c", "npm run expire"],
+  "nodeSelector" : {
+    "intendedfor" : "services",
+  },
   "env" : [
     {"name": "REDIS_HOST", "value": "redis-master"}
   ]

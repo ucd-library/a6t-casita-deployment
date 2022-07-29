@@ -1,3 +1,5 @@
 module.exports = config => ({
-  intendedfor : 'services'
+  "nodeSelector" : {
+    "intendedfor" : "services",
+  }
 })

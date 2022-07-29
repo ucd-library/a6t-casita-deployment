@@ -12,10 +12,11 @@ cd $ROOT_DIR/../..
 
 source ./config.sh
 
+kubectl rollout restart deployment decoder
 kubectl rollout restart deployment a6t-composer
 kubectl rollout restart deployment a6t-expire
 kubectl rollout restart deployment worker
 kubectl rollout restart deployment rest
 kubectl rollout restart deployment external-topics
-kubectl rollout restart deployment product-writer
+kubectl rollout restart deployment grb-product-writer
 kubectl rollout restart deployment nfs-expire

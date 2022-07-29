@@ -22,6 +22,8 @@ spec:
         args: {{{json ARGS}}}
         {{/if}}
         env:
+        - name : "GOOGLE_APPLICATION_CREDENTIALS"
+          value : "/etc/google/service-account.json"
         - name: INSTANCE_ENV
           value: "{{BRANCH}}"
         {{#each env}}
@@ -50,6 +52,8 @@ spec:
         - name: local-casita-services
           mountPath: /casita/services
           readOnly: true
+        - mountPath: /etc/google
+          name: service-account
         {{#each volumes}}
         - name: {{name}}
           mountPath: {{mountPath}}
@@ -76,6 +80,9 @@ spec:
         persistentVolumeClaim:
           claimName: {{pvc-name}}
           readOnly: false
+      - name: service-account
+        secret:
+          secretName: service-account
       {{#if nodeSelector}}
       nodeSelector:
         {{#if intendedfor}}

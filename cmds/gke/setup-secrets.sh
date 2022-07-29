@@ -16,9 +16,7 @@ gcloud secrets versions access latest --secret=casita-jwt-secret > ../../jwt-sec
 echo "Setting secrets for ${GKE_CLUSTER_NAME}"
 
 # setup kubectl to connect to cluster
-gcloud container clusters get-credentials ${GKE_CLUSTER_NAME}  \
-  --zone ${GC_ZONE} \
-  --project ${GC_PROJECT_ID}
+./setup-kubectl.sh
 
 kubectl delete secret decoder-ssh-user || true
 kubectl create secret generic decoder-ssh-user --from-file=value=../../ssh.username
