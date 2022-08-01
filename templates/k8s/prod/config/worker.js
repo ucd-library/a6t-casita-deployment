@@ -3,10 +3,12 @@ module.exports = config => ({
   "SERVICE_NAME" : "worker",
   "COMMAND" : "bash",
   "ARGS" : ["-c", "npm run worker"],
+  "K8S_DEPLOYMENT_CPU" : "400m",
   "nodeSelector" : {
     "intendedfor" : "worker",
   },
   "env" : [
+    {"name": "KAFKA_CLIENT_ID", "value": "worker"}
     // {"name": "LOG_LEVEL", "value": "debug"}
   ]
 });

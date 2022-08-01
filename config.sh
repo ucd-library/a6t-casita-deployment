@@ -138,12 +138,17 @@ GKE_CLUSTER_NAME=casita
 GC_PROJECT_ID=casita-298223
 GC_ZONE=us-central1-c
 K8S_ENV=gce-prod
+if [[ $LOCAL_DEV == 'true' ]]; then
+  K8S_ENV=minikube
+fi
+
 # setting this to "log" generates a lot of logs,
 # causes a pick spike in GC costs
 K8S_LOG_LEVEL=info
+K8S_DEPLOYMENT_CPU=250m
 
 FILESTORE_PATH=/casita
-FILESTORE_IP=10.89.237.74
+FILESTORE_IP=10.195.28.202
 FILESTORE_VOLUME_NAME=nfs-persistent-storage
 
 API_SERVICE_INTERNAL_IP=10.128.0.57

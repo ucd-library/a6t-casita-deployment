@@ -1,2 +1,4 @@
 nodeSelector: 
-  intendedfor: kafka
+  intendedfor: services
+persistence:
+  size: 150Gi

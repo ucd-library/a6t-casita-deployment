@@ -3,7 +3,7 @@ module.exports = config => ({
   "COMMAND" : "bash",
   "ARGS" : ["-c", "npm run decoder"],
   "nodeSelector" : {
-    "intendedfor" : "decoders",
+    "intendedfor" : "services",
   },
   "volumes": [
     {

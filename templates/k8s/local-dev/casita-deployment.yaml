@@ -25,7 +25,7 @@ spec:
         - name : "GOOGLE_APPLICATION_CREDENTIALS"
           value : "/etc/google/service-account.json"
         - name: INSTANCE_ENV
-          value: "{{BRANCH}}"
+          value: "{{K8S_ENV}}"
         {{#each env}}
         - name: {{name}}
           value: "{{value}}"

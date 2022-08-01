@@ -19,7 +19,7 @@ spec:
         imagePullPolicy: {{IMAGE_PULL_POLICY}}
         env:
         - name: INSTANCE_ENV
-          value: "{{BRANCH}}"
+          value: "{{K8S_ENV}}"
         - name: PGDATA
           value: "/var/lib/postgresql/data/pgdata"
         resources:

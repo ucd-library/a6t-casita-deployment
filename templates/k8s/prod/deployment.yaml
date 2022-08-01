@@ -37,11 +37,11 @@ spec:
         {{/each}}
         resources:
           limits:
-            memory: "256Mi"
+            memory: "500Mi"
             cpu: "1000m"
           requests:
             memory: "128Mi"
-            cpu: "100m"
+            cpu: "{{K8S_DEPLOYMENT_CPU}}"
         volumeMounts:
         - mountPath: /storage/network
           name: nfspsc

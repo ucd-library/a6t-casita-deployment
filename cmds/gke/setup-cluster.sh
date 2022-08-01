@@ -13,27 +13,27 @@ gcloud beta container clusters create ${GKE_CLUSTER_NAME} \
   --num-nodes 3 \
   --disk-size 20GB \
   --release-channel=regular \
-  --machine-type e2-medium \
+  --machine-type n2-standard-4 \
   --node-labels=intendedfor=services
   # --cluster-version=${GKE_CLUSTER_VERSION} \
 
-# create decoder instance
-gcloud beta container node-pools create decoders \
-  --cluster ${GKE_CLUSTER_NAME} \
-  --zone ${GC_ZONE} \
-  --machine-type e2-medium \
-  --num-nodes 1 \
-  --disk-size 20GB \
-  --node-labels=intendedfor=decoders
+# # create decoder instance
+# gcloud beta container node-pools create decoders \
+#   --cluster ${GKE_CLUSTER_NAME} \
+#   --zone ${GC_ZONE} \
+#   --machine-type n2-standard-2 \
+#   --num-nodes 1 \
+#   --disk-size 20GB \
+#   --node-labels=intendedfor=decoders
 
-# create kafka instance
-gcloud beta container node-pools create kafka \
-  --cluster ${GKE_CLUSTER_NAME} \
-  --zone ${GC_ZONE} \
-  --machine-type e2-medium \
-  --num-nodes 1 \
-  --disk-size 20GB \
-  --node-labels=intendedfor=kafka
+# # create kafka instance
+# gcloud beta container node-pools create kafka \
+#   --cluster ${GKE_CLUSTER_NAME} \
+#   --zone ${GC_ZONE} \
+#   --machine-type n2-standard-2 \
+#   --num-nodes 1 \
+#   --disk-size 20GB \
+#   --node-labels=intendedfor=kafka
 
 # create scalable worker pool
 gcloud beta container node-pools create worker-pool \

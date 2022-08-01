@@ -5,5 +5,8 @@ module.exports = config => ({
   "nodeSelector" : {
     "intendedfor" : "services",
   },
+  "env" : [
+    {"name": "KAFKA_CLIENT_ID", "value": "grb-product-writer"}
+  ],
   "ARGS" : ["-c", "npm run product-writer"]
 });
