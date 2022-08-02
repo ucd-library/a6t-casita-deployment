@@ -21,7 +21,7 @@ kubectl apply -f $DEPLOYMENT_DIR/a6t-expire.yaml
 kubectl apply -f $DEPLOYMENT_DIR/worker.yaml
 if [[ $LOCAL_DEV != 'true' ]]; then
   kubectl autoscale deployment worker \
-  --max 48 --min 10 \
+  --max 72 --min 10 \
   --cpu-percent 60 || true
 fi
 
@@ -32,6 +32,5 @@ fi
 
 kubectl apply -f $DEPLOYMENT_DIR/external-topics.yaml
 kubectl apply -f $DEPLOYMENT_DIR/external-topics-service.yaml
-kubectl apply -f $DEPLOYMENT_DIR/decoder.yaml
 kubectl apply -f $DEPLOYMENT_DIR/product-writer.yaml
 kubectl apply -f $DEPLOYMENT_DIR/nfs-expire.yaml

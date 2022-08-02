@@ -16,3 +16,7 @@ gcloud config set project ${GC_PROJECT_ID}
 ../k8s/deploy-postgres.sh || true
 ../k8s/deploy-rabbitmq.sh || true
 ../k8s/deploy-casita.sh || true
+
+echo "sleeping for 1min to let cluster start"
+sleep 60
+../k8s/deploy-decoder.sh || true
