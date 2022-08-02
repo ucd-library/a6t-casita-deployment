@@ -132,6 +132,18 @@ if [[ $LOCAL_DEV == "true" ]]; then
       -t $TEMPLATE_ROOT/service.yaml \
       -o $DEPLOYMENT_DIR/postgres-service.yaml
 
+
+# postgres
+  cork-template \
+      -c ../config.sh \
+      -t $TEMPLATE_ROOT/rabbitmq.yaml \
+      -o $DEPLOYMENT_DIR/rabbitmq.yaml
+
+  cork-template \
+      -c ../config.sh \
+      -t $TEMPLATE_ROOT/rabbitmq-service.yaml \
+      -o $DEPLOYMENT_DIR/rabbitmq-service.yaml
+
   # a6t services
   for file in $TEMPLATE_ROOT/config/a6t-*.js; do 
     filename=$(basename $file)
@@ -173,6 +185,7 @@ else
   # postgres
   cork-template \
       -c ../config.sh \
+      -c $TEMPLATE_ROOT/config/postgres.js \
       -t $TEMPLATE_ROOT/postgres.yaml \
       -o $DEPLOYMENT_DIR/postgres.yaml
 
@@ -180,6 +193,18 @@ else
       -c $TEMPLATE_ROOT/config/postgres-service.json \
       -t $TEMPLATE_ROOT/service.yaml \
       -o $DEPLOYMENT_DIR/postgres-service.yaml
+
+  # rabbitmq
+  cork-template \
+      -c ../config.sh \
+      -c $TEMPLATE_ROOT/config/rabbitmq.js \
+      -t $TEMPLATE_ROOT/rabbitmq.yaml \
+      -o $DEPLOYMENT_DIR/rabbitmq.yaml
+
+  cork-template \
+      -c ../config.sh \
+      -t $TEMPLATE_ROOT/rabbitmq-service.yaml \
+      -o $DEPLOYMENT_DIR/rabbitmq-service.yaml
 
   # Init service
   cork-template \
