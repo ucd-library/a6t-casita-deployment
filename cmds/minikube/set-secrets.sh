@@ -8,6 +8,7 @@ source config.sh
 
 gcloud config set project ${GC_PROJECT_ID}
 gcloud secrets versions access latest --secret=casita-service-account > service-account.json
+gcloud secrets versions access latest --secret=grb-box-ssh-key > ./casita-local-dev/id_rsa
 
 kubectl delete secret local-dev-secrets|| true
 kubectl create secret generic local-dev-secrets --from-env-file=casita-local-dev/.env
