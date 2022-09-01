@@ -1,8 +1,9 @@
 steps:
 
   - name: gcr.io/cloud-builders/gcloud
+    secretEnv: ['CLOUD_BUILD_SERVICE_ACCOUNT']
     entrypoint: 'bash'
-    args: [ '-c', 'gcloud secrets versions access latest --secret=libosdev-dockerhub-secret > pass.txt' ]
+    args: [ '-c', 'echo "$$CLOUD_BUILD_SERVICE_ACCOUNT" >> ./service-account.json' ]
     # this is a hack to get the BRANCH_NAME and SHORT_SHA in the build metadata even when
     # submitted from via ./gcloud/push.sh.  All --substitutions variables have to exist in the
     # yaml file.  Even when you are substiting special variables like BRANCH_NAME and SHORT_SHA (lame).
@@ -18,23 +19,28 @@ steps:
     env:
       - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
 
-  - name: gcr.io/cloud-builders/docker
-    entrypoint: "bash"
-    args: ["-c", "./cmds/pull.sh"]
-    env:
-      - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
+  # - name: gcr.io/cloud-builders/docker
+  #   entrypoint: "bash"
+  #   args: ["-c", "./cmds/pull.sh"]
+  #   env:
+  #     - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
 
   - name: gcr.io/cloud-builders/docker
     entrypoint: "bash"
-    args: ["-c", "./cmds/build.sh"]
+    args: ["-c", "./cmds/kaniko-build.sh"]
     env: 
       - 'GCLOUD_BUILD=true'
       - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
 
-  - name: gcr.io/cloud-builders/docker
-    entrypoint: "bash"
-    args: ["-c", "./cmds/push.sh"]
-    env:
-      - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
+  # - name: gcr.io/cloud-builders/docker
+  #   entrypoint: "bash"
+  #   args: ["-c", "./cmds/push.sh"]
+  #   env:
+  #     - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/digital-ucdavis-edu/secrets/casita-gcb-service-account-key/versions/latest
+    env: 'CLOUD_BUILD_SERVICE_ACCOUNT'
 
 timeout: 1800s
