@@ -55,6 +55,7 @@ echo "starting helm deployments"
 ../k8s/deploy-kafka.sh || true
 ../k8s/deploy-redis.sh || true
 ../k8s/deploy-postgres.sh || true
+../k8s/deploy-rabbitmq.sh || true
 ../k8s/deploy-casita.sh || true
 
 cd $ROOT_DIR

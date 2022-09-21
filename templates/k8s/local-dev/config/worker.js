@@ -5,6 +5,7 @@ module.exports = config => ({
   "ARGS" : ["-c", "npm run worker"],
   // "ARGS" : ["-c", "tail -f /dev/null"],
   "env" : [
-    {"name": "LOG_LEVEL", "value": "debug"}
+    {"name": "LOG_LEVEL", "value": "debug"},
+    {"name": "BUFFER_SIZE", "value": "1000"}
   ]
 });

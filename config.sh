@@ -21,7 +21,7 @@ fi
 
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v0.0.1-alpha${BUILD_NUM}
+APP_VERSION=v2.0.0-beta${BUILD_NUM}
 
 ##
 # TAGS
@@ -73,7 +73,6 @@ NODE_VERSION=16
 # Container
 ##
 
-INIT_KAFKA_BASE_IMAGE=gcr.io/ucdlib-pubreg/init-services-kafka:main
 INIT_BASE_IMAGE=gcr.io/ucdlib-pubreg/init-services:main
 
 # TODO: switch to branch
@@ -94,10 +93,10 @@ CASITA_POSTGIS_IMAGE_NAME_TAG=$CASITA_POSTGIS_IMAGE_NAME:$APP_VERSION
 
 ALL_DOCKER_BUILD_IMAGES=( $A6T_IMAGE_NAME \
  $CASITA_A6T_IMAGE_NAME $CASITA_POSTGIS_IMAGE_NAME 
- $CASITA_INIT_IMAGE_NAME )
+ $CASITA_INIT_IMAGE_NAME $CASITA_IMAGE_NAME )
 
 ALL_DOCKER_BUILD_IMAGE_TAGS=( $A6T_IMAGE_NAME_TAG \
- $CASITA_A6T_IMAGE_NAME_TAG \
+ $CASITA_A6T_IMAGE_NAME_TAG $CASITA_IMAGE_NAME_TAG \
  $CASITA_POSTGIS_IMAGE_NAME_TAG \
  $CASITA_INIT_IMAGE_NAME_TAG  )
 

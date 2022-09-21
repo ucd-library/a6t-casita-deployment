@@ -16,6 +16,7 @@ spec:
       containers:
       - name: postgres
         image: {{CASITA_POSTGIS_IMAGE_NAME_TAG}}
+        args: ["-c", "max_connections=500"]
         imagePullPolicy: {{IMAGE_PULL_POLICY}}
         env:
         - name: PGDATA

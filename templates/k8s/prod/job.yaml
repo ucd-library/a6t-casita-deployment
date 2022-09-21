@@ -9,6 +9,7 @@ spec:
       {{#each containers}}
       - name: {{name}}
         image: {{image}}
+        imagePullPolicy: Always
         command: {{{json command}}}
         env:
         - name: INSTANCE_ENV

@@ -19,24 +19,32 @@ steps:
     env:
       - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
 
-  # - name: gcr.io/cloud-builders/docker
-  #   entrypoint: "bash"
-  #   args: ["-c", "./cmds/pull.sh"]
-  #   env:
-  #     - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
-
   - name: gcr.io/cloud-builders/docker
     entrypoint: "bash"
-    args: ["-c", "./cmds/kaniko-build.sh"]
-    env: 
-      - 'GCLOUD_BUILD=true'
+    args: ["-c", "./cmds/pull.sh"]
+    env:
       - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
 
   # - name: gcr.io/cloud-builders/docker
   #   entrypoint: "bash"
-  #   args: ["-c", "./cmds/push.sh"]
-  #   env:
+  #   args: ["-c", "./cmds/kaniko-build.sh"]
+  #   env: 
+  #     - 'GCLOUD_BUILD=true'
   #     - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
+
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: "bash"
+    args: ["-c", "./cmds/build.sh"]
+    env: 
+      - 'GCLOUD_BUILD=true'
+      - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
+
+
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: "bash"
+    args: ["-c", "./cmds/push.sh"]
+    env:
+      - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=true'
 
 availableSecrets:
   secretManager:

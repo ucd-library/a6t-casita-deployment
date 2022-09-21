@@ -14,7 +14,7 @@ source config.sh
 # build argonaut first
 # TODO: move this to pre-built
 NODE_VERSION=$NODE_VERSION $REPOSITORY_DIR/argonaut/build/run.sh
-CACHE_TIME=720h
+CACHE_TIME=0h
 
 ##
 # NodeJS base task and services image
