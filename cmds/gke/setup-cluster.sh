@@ -11,7 +11,7 @@ gcloud config set project ${GC_PROJECT_ID}
 gcloud beta container clusters create ${GKE_CLUSTER_NAME} \
   --zone ${GC_ZONE} \
   --num-nodes 3 \
-  --disk-size 20GB \
+  --disk-size 50GB \
   --release-channel=regular \
   --machine-type n2-standard-4 \
   --node-labels=intendedfor=services

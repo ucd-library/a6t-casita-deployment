@@ -135,7 +135,8 @@ fi
 
 GKE_CLUSTER_NAME=casita
 GC_PROJECT_ID=casita-298223
-GC_ZONE=us-central1-c
+GC_REGION=us-central1
+GC_ZONE=$GC_REGION-c
 K8S_ENV=gce-prod
 if [[ $LOCAL_DEV == 'true' ]]; then
   K8S_ENV=minikube
